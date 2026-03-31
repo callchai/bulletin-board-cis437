@@ -7,13 +7,51 @@
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
+    <div id="terms-modal">
+        <div id="terms-content">
+            <h2>End User License Agreement</h2>
+            <!-- EULA lol -->
+            <div class="eula-box">
+            <p>Before you may post on this Board, you <b>must heed and agree</b> to the following:</p>
+            <ol>
+                <li>Thou shalt have no other bulletin boards before this one.</li>
+                <li>Thou shalt not misuse the holy post button.</li>
+                <li>Thou shalt not make false idols of fellow posters, nor worship them.</li>
+                <li>Thou shalt not blaspheme or misuse the name of this board.</li>
+                <li>Remember the board day, and keep it sacred and productive.</li>
+                <li>Honor thy aliases, for they are thy identity upon the board.</li>
+                <li>Thou shalt not harm nor deface the posts of others.</li>
+                <li>Thou shalt not steal posts, nor claim them as thine own.</li>
+                <li>Thou shalt not bear false witness upon the board.</li>
+                <li>Thou shalt not covet thy neighbor’s posts, nor their colors.</li>
+            </ol>
+            </div>
+            <!-- Violation warning -->
+            <div class="violation-box">
+            <p>Violations of these terms may bring forth <em>The Rapture</em>!</p>
+            </div>
+            <!-- Accept  -->
+            <button id="accept-terms">
+            I Accept, for I am worthy of entering the Board's Kingdom
+            </button>
+        </div>
+    </div>
+    <div id="welcome-modal">
+        <div id="welcome-content">
+            <h2>Welcome!</h2>
+            <p id="user-alias"></p><br><br>
+            <p id="board-quote"></p>
+            <button id="enter-board">Enter Board</button>
+        </div>
+    </div>
   <div id="toolbar">
-    <div id="identity">You are <strong id="codename"></strong></div>
+    <div id="identity">Thou are <strong id="codename"></strong></div>
     <button id="add-btn">Post</button>
-    <div id="timer">Board up for <strong id="clock">00:00:00</strong></div>
+    <div id="timer">Board Lifespan <strong id="clock">00:00:00</strong></div>
   </div>
   <div id="board">
   </div>
+  <script src="/static/js/term-modal.js"></script>
   <script src="/static/js/board.js"></script>
 </body>
 </html>
