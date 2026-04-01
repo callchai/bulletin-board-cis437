@@ -1,8 +1,6 @@
 /*
 THIS IS A TEMPORARY TEST
 */
-
-
 const ALIAS = ['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel',
     'India','Juliet','Kilo','Lima','Mike','November','Oscar','Papa',
     'Quebec','Romeo','Sierra','Tango','Uniform','Victor','Whiskey','Xray','Yankee','Zulu'];
@@ -13,9 +11,33 @@ const COLORS = [
     {bg:'#f9c5d1',author:'#a0253a'},
 ];
 
+/*
+This will generate the name and Color.
+*/
+const savedName  = getCookie('bb_alias');
+const savedColor = getCookie('bb_color');
 
-const name = ALIAS[Math.floor(Math.random() * ALIAS.length)] + '-' + (100 + Math.floor(Math.random() * 900));
-const userColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+let name;
+if (savedName) {
+    name = savedName;
+} else {
+    const randomAlias = ALIAS[Math.floor(Math.random() * ALIAS.length)];
+    const randomNumber = 100 + Math.floor(Math.random() * 900);
+    name = `${randomAlias}-${randomNumber}`;
+}
+
+let userColor;
+if (savedColor) {
+    userColor = JSON.parse(savedColor);
+} else {
+    userColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+}
+
+if (!savedName) {
+    setCookie('bb_alias', name);
+    setCookie('bb_color', JSON.stringify(userColor));
+}
+
 // give color choice later?
 document.getElementById('codename').textContent = name;
 

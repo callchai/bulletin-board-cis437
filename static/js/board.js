@@ -1,8 +1,10 @@
 let boardStart = Date.now();
 const board = document.getElementById('board');
 let placing = false, activeEl = null, activeColor = null;
+let currentUserName = null;
 
 function initBoard(userName, userColor) {
+    currentUserName = userName;
     // Show clock
     setInterval(() => {
         const s = Math.floor((Date.now() - boardStart) / 1000);
@@ -11,6 +13,13 @@ function initBoard(userName, userColor) {
         const sc = String(s%60).padStart(2,'0');
         document.getElementById('clock').textContent = `${h}:${m}:${sc}`;
     }, 1000);
+
+    // TODO: make sure this works. supposed to make sure posts 
+    // stay on board 
+    fetch('/api/posts')
+        .then(r => r.json())
+        .then(posts => posts.forEach(p => renderNote(p)));
+
 
     // this is where the magic happens (sticky note looking thang)
     document.getElementById('add-btn').addEventListener('click', () => {
@@ -48,12 +57,32 @@ function dropNote(e) {
     const x = e.clientX - r.left - 80;
     const y = e.clientY - r.top  - 20;
     activeEl.remove();
+
+    const postData = {
+        text, x, y,
+        author: currentUserName,
+        color: activeColor
+    };
+
+    // Test if this works with firestore db
+    fetch('/api/posts', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(postData)
+    })
+    .then(r => r.json())
+    .then(res => renderNote({...postData, id: res.id}));
+
+    cleanup();
+}
+
+function renderNote(p) {
     const note = document.createElement('div');
     note.className = 'sticky';
-    note.style.cssText = `left:${x}px;top:${y}px;background:${activeColor.bg};`;
-    note.innerHTML = `<div class="author" style="color:${activeColor.author}">${name}</div>${text}`;
+    note.dataset.id = p.id;
+    note.style.cssText = `left:${p.x}px;top:${p.y}px;background:${p.color.bg};`;
+    note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${p.text}`;
     board.appendChild(note);
-    cleanup();
 }
 
 function cleanup() {
