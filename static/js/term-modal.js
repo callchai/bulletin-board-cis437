@@ -126,8 +126,6 @@ function showWelcomeBackModal() {
     });
 }
 
-initBoard(name, userColor);
-
 if (!getCookie(aliasCookieName)) {
     termsModal.classList.add('show');
     acceptBtn.addEventListener('click', () => {
@@ -141,3 +139,5 @@ if (!getCookie(aliasCookieName)) {
 } else {
     showWelcomeBackModal();
 }
+
+initBoard(name, userColor); // Try loading board during welcome

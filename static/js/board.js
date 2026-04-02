@@ -94,3 +94,7 @@ function cleanup() {
     board.removeEventListener('mousemove', moveGhost);
     board.removeEventListener('click', dropNote);
 }
+
+if (typeof name !== 'undefined' && typeof userColor !== 'undefined') {
+    initBoard(name, userColor);
+}
