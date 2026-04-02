@@ -101,16 +101,29 @@ if (typeof name !== 'undefined' && typeof userColor !== 'undefined') {
 
 // TODO: Test help button and tabs
 document.getElementById('help-btn').addEventListener('click', () => {
-    const panel = document.getElementById('help-panel');
-    panel.classList.toggle('open');
+    const modal = document.getElementById('help-modal');
+    modal.classList.add('show');
 
-    if (panel.classList.contains('open')) {
+    // Reset to home tab with new quote each open
+    document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.help-section').forEach(s => s.classList.remove('active'));
+    document.querySelector('.help-tab[data-target="help-home"]').classList.add('active');
+    document.getElementById('help-home').classList.add('active');
+    const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    document.getElementById('help-quote').innerHTML = quote;
+});
+
+document.getElementById('help-close').addEventListener('click', () => {
+    document.getElementById('help-modal').classList.remove('show');
+});
+
+document.querySelectorAll('.help-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
         document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.help-section').forEach(s => s.classList.remove('active'));
-        document.getElementById('help-home').classList.add('active');
-        const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-        document.getElementById('help-quote').innerHTML = `<em>${quote}</em>`;
-    }
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.target).classList.add('active');
+    });
 });
 
 // This should get new posts every second
