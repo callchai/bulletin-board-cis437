@@ -43,9 +43,18 @@ const COLORS = [
         `Dear Bulletin Board, I posted to you, but you still ain't callin'.
         I left my post, my name, and my number at the bottom. I posted two notes back in autumn, you must not have got 'em. 
         There probably was a problem with the server or something. 
-        Sometimes I scribble IP addresses too sloppy when I jot 'em.`,
+        Sometimes I scribble the URL too sloppy when I type 'em.`,
         /*`<strong>Let it be known:</strong> no poster shall utter the blasphemies of Lola Young, Benson Boone, or Olivia Rodrigo, for their 
         cries are an abomination to the Board, and those who speak of them shall be cast aside.`,*/
+        `And the Board said, "Let there be posts," and there were posts.`,
+        `Remember the fate of the region us-central1-a, O poster, lest your project likewise be consumed.`,
+        `"And when the Troll posted his final blasphemy, silence fell upon the Board. The clock stopped, the sky darkened, 
+        and a great flood came, washing away all posts and resetting the clock." - Board of Revelations 9:43`,
+        `To post or not to post, that is the question.`,
+        `All posters are equal, but some posters are more righteous than others.`,
+        `I post, therefore I am.`,
+        `I have a dream, that one day, all posters will post in harmony...`,
+        `Ask not what the Board can do for you, ask what you can do for the Board.`,
     ];
 
 /*
