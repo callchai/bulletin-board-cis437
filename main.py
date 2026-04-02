@@ -12,14 +12,21 @@ def index():
 # This is for firestore, to get and add posts
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
-    posts = db.collection('posts').order_by('timestamp').stream()
+    """
+    Fixed bum ahh caching issue
+    """
+    posts = db.collection('posts').stream()
     result = []
     for p in posts:
         d = p.to_dict()
         d['id'] = p.id
         d.pop('timestamp', None)
         result.append(d)
-    return jsonify(result)
+    response = jsonify(result)
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/api/posts', methods=['POST'])
 def add_post():
