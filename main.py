@@ -51,6 +51,25 @@ def get_board_start():
         now = datetime.now(timezone.utc)
         db.collection('meta').document('board').set({'createdAt': now})
         return jsonify({'startMs': int(now.timestamp() * 1000)})
+    
+@app.route('/api/posts', methods=['GET'])
+def get_posts():
+    """
+    this is to fighting caching issues.
+    thanks gogle, edge, really appreciate it
+    """
+    posts = db.collection('posts').stream()
+    result = []
+    for p in posts:
+        d = p.to_dict()
+        d['id'] = p.id
+        d.pop('timestamp', None)
+        result.append(d)
+    response = jsonify(result)
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
