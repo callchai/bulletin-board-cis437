@@ -5,7 +5,6 @@ let currentUserName = null;
 function initBoard(userName, userColor) {
     currentUserName = userName;
     // this should make the life clock work
-    fetchPosts().then(posts => posts.forEach(p => renderNote(p)));
     fetch('/api/board-start')
         .then(r => r.json())
         .then(data => {
@@ -18,6 +17,13 @@ function initBoard(userName, userColor) {
                 document.getElementById('clock').textContent = `${h}:${m}:${sc}`;
             }, 1000);
         });
+
+    // TODO: make sure this works. supposed to make sure posts 
+    // stay on board 
+    fetch('/api/posts')
+        .then(r => r.json())
+        .then(posts => posts.forEach(p => renderNote(p)));
+
 
     // this is where the magic happens (sticky note looking thang)
     document.getElementById('add-btn').addEventListener('click', () => {
@@ -37,17 +43,6 @@ function initBoard(userName, userColor) {
         board.addEventListener('click', dropNote);
     });
 }
-
-// THANKS CHROME, EDGE
-function fetchPosts() {
-    return fetch('/api/posts', {
-        headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache'
-        }
-    }).then(r => r.json());
-}
-
 
 // ghosty
 function moveGhost(e) {
@@ -106,11 +101,13 @@ if (typeof name !== 'undefined' && typeof userColor !== 'undefined') {
 
 // This should get new posts every second
 setInterval(() => {
-    fetchPosts().then(posts => {
-        posts.forEach(p => {
-            if (!document.querySelector(`.sticky[data-id="${p.id}"]`)) {
-                renderNote(p);
-            }
+    fetch('/api/posts')
+        .then(r => r.json())
+        .then(posts => {
+            posts.forEach(p => {
+                if (!document.querySelector(`.sticky[data-id="${p.id}"]`)) {
+                    renderNote(p);
+                }
+            });
         });
-    });
-}, 3000);
+}, 1000);
