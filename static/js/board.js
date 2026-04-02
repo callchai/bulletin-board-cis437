@@ -99,6 +99,20 @@ if (typeof name !== 'undefined' && typeof userColor !== 'undefined') {
     initBoard(name, userColor);
 }
 
+// TODO: Test help button and tabs
+document.getElementById('help-btn').addEventListener('click', () => {
+    const panel = document.getElementById('help-panel');
+    panel.classList.toggle('open');
+
+    if (panel.classList.contains('open')) {
+        document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.help-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('help-home').classList.add('active');
+        const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        document.getElementById('help-quote').innerHTML = `<em>${quote}</em>`;
+    }
+});
+
 // This should get new posts every second
 setInterval(() => {
     fetch('/api/posts')

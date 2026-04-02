@@ -349,3 +349,94 @@ body {
   transform: scale(1.1);
   box-shadow: 0 0 35px rgba(212,175,55,1), 0 8px 20px rgba(0,0,0,0.35);
 }
+#toolbar-right {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Help button and panel */
+#help-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1;
+}
+
+#help-panel {
+    position: fixed;
+    top: 56px;
+    right: 0;
+    width: 380px;
+    height: calc(100vh - 56px);
+    background: #fdf6e3;
+    border-left: 2px solid #d4af37;
+    display: flex;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+#help-panel.open {
+    transform: translateX(0);
+}
+
+#help-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 10px;
+    border-right: 1px solid #d4af37;
+    width: 110px;
+    flex-shrink: 0;
+}
+
+.help-tab {
+    padding: 10px 8px;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    background: #fffbee;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: left;
+    color: #b8860b;
+    transition: background 0.2s;
+}
+
+.help-tab:hover, .help-tab.active {
+    background: #d4af37;
+    color: #fff;
+}
+
+#help-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.help-section {
+    display: none;
+}
+
+.help-section.active {
+    display: block;
+}
+
+.help-section h3 {
+    font-family: "Georgia", serif;
+    color: #b8860b;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.help-section p {
+    color: #333;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
