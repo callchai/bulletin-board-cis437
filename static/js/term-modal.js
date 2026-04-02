@@ -72,7 +72,7 @@ function showWelcomeModal() {
     const boardQuote = document.getElementById('board-quote');
 
     userAliasP.innerHTML = `
-    <p>Arise, poster! The Board has called to you.</p><br>
+    <p>Arise, poster, for The Board has called to you.</p><br>
     <p>You are henceforth named <strong>${name}</strong>.</p>
     `;
 
@@ -94,8 +94,8 @@ function showWelcomeModal() {
         I left my post, my name, and my number at the bottom. I posted two notes back in autumn, you must not have got 'em. 
         There probably was a problem with the server or something. 
         Sometimes I scribble IP addresses too sloppy when I jot 'em.`,
-        `<strong>Let it be known:</strong> no poster shall utter the blasphemies of Lola Young, Benson Boone, or Olivia Rodrigo, for their 
-        cries are an abomination to the Board, and those who speak of them shall be cast aside.`,
+        /*`<strong>Let it be known:</strong> no poster shall utter the blasphemies of Lola Young, Benson Boone, or Olivia Rodrigo, for their 
+        cries are an abomination to the Board, and those who speak of them shall be cast aside.`,*/
     ];
 
     const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
