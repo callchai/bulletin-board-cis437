@@ -100,6 +100,8 @@ function renderNote(p) {
 }
 
 function openViewModal(p) {
+    if (placing) return; // TODO: check if this disables from viewing while in place mode
+
     const modal = document.getElementById('view-modal');
     const note = document.getElementById('view-note');
     document.getElementById('view-author').style.color = p.color.author;
@@ -164,4 +166,4 @@ setInterval(() => {
                 }
             });
         });
-}, 1000);
+}, 8000);

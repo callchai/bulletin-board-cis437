@@ -12,13 +12,15 @@ body {
 
 html, body {
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* board style */
 #board {
   width: 100%;
   height: calc(100vh - 56px);
+  min-height: 400px;
+  min-width: 600px;
   position: relative;
   overflow: hidden;
   background: #f5f0e8;
@@ -511,7 +513,6 @@ html, body {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    backdrop-filter: blur(6px);
     background: rgba(0,0,0,0.4);
     display: flex;
     justify-content: center;
@@ -761,4 +762,10 @@ html, body {
 /* Pointer on viewing a post */
 .sticky {
     cursor: pointer;
+}
+
+/* Outline over post -- TODO: test sensitivity*/
+.sticky:hover {
+    outline: 2px solid rgba(0, 0, 0, 0.25);
+    z-index: 10;
 }
