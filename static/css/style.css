@@ -22,7 +22,7 @@ html, body {
   min-height: 400px;
   min-width: 600px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: #f5f0e8;
   background-image: radial-gradient(#d0c8b8 1px, transparent 1px);
   background-size: 28px 28px;
@@ -37,6 +37,7 @@ html, body {
   padding: 10px 20px;
   background: #fff;
   border-bottom: 1px solid #ddd;
+  min-width: 600px;
 }
 
 #identity {

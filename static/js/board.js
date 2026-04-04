@@ -59,6 +59,7 @@ function dropNote(e) {
     board.removeEventListener('click', dropNote);
     board.style.cursor = '';
     placing = false;
+    document.querySelectorAll('.sticky').forEach(n => n.style.pointerEvents = '');
 
     const postData = { text, x, y, author: currentUserName, color: colorSnapshot };
     fetch('/api/posts', {
@@ -84,6 +85,7 @@ function startPlacing(text, color) {
     ghost.innerHTML = `<div class="author" style="color:${color.author}">${currentUserName}</div>${text}`;
     board.appendChild(ghost);
     board.dataset.pendingText = text;
+    document.querySelectorAll('.sticky').forEach(n => n.style.pointerEvents = 'none');
     board.addEventListener('mousemove', moveGhost);
     board.addEventListener('click', dropNote);
     board.style.cursor = 'crosshair';
