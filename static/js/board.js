@@ -198,20 +198,24 @@ setInterval(() => {
 /*
 scaleBaord is another band aid fix to make board size 
 consistent across different resolutions.
+
+WE'RE ON FIX ATTEMPt 3
 */
 function scaleBoard() {
     const wrapper = document.getElementById('board-wrapper');
-    const board = document.getElementById('board');
-    const availW = window.innerWidth;
-    const availH = window.innerHeight - 56;
+    const availW = wrapper.clientWidth;
+    const availH = wrapper.clientHeight;
     const scaleX = availW / 1600;
     const scaleY = availH / 900;
     const scale = Math.min(scaleX, scaleY);
 
     board.style.transform = `scale(${scale})`;
+    board.style.transformOrigin = 'top left';
 
-    wrapper.style.width = Math.round(1600 * scale) + 'px';
-    wrapper.style.height = Math.round(900 * scale) + 'px';
+    const scaledW = 1600 * scale;
+    const scaledH = 900 * scale;
+    board.style.left = Math.max(0, (availW - scaledW) / 2) + 'px';
+    board.style.top = Math.max(0, (availH - scaledH) / 2) + 'px';
 }
 
 scaleBoard();
