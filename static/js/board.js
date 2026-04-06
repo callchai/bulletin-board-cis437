@@ -40,16 +40,22 @@ function moveGhost(e) {
     const ghost = document.getElementById('ghost-note');
     if (!ghost) return;
     const r = board.getBoundingClientRect();
-    ghost.style.left = (e.clientX - r.left - 80) + 'px';
-    ghost.style.top  = (e.clientY - r.top  - 20) + 'px';
+
+    // --- !!! --- TEST THIS FOR SCALING ISSUE FIX --- !!! ---
+    const scale = r.width / 1600;
+    ghost.style.left = ((e.clientX - r.left) / scale - 80) + 'px';
+    ghost.style.top  = ((e.clientY - r.top)  / scale - 20) + 'px';
 }
 
 function dropNote(e) {
     if (!placing) return;
     const ghost = document.getElementById('ghost-note');
     const r = board.getBoundingClientRect();
-    const x = e.clientX - r.left - 80;
-    const y = e.clientY - r.top - 20;
+
+    // --- !!! --- TEST THIS FOR SCALING ISSUE FIX --- !!! ---
+    const scale = r.width / 1600;
+    const x = (e.clientX - r.left) / scale - 80;
+    const y = (e.clientY - r.top)  / scale - 20;
     const text = board.dataset.pendingText;
     const colorSnapshot = { ...activeColor };
 
@@ -204,7 +210,6 @@ function scaleBoard() {
 
     board.style.transform = `scale(${scale})`;
 
-    // TEST THIS --> Make sure it gets rid of random dead white space
     wrapper.style.width = Math.round(1600 * scale) + 'px';
     wrapper.style.height = Math.round(900 * scale) + 'px';
 }
