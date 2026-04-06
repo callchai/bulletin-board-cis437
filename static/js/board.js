@@ -82,6 +82,7 @@ function startPlacing(text, color) {
     ghost.style.left = '-9999px';
     ghost.style.top = '-9999px';
     ghost.style.pointerEvents = 'none';
+    ghost.style.zIndex = '9999';
     ghost.innerHTML = `<div class="author" style="color:${color.author}">${currentUserName}</div>${text}`;
     board.appendChild(ghost);
     board.dataset.pendingText = text;
@@ -188,4 +189,18 @@ setInterval(() => {
         });
 }, 8000);
 
+/*
+scaleBaord is another band aid fix to make board size 
+consistent across different resolutions.
+*/
+function scaleBoard() {
+    const wrapper = document.getElementById('board-wrapper');
+    const board = document.getElementById('board');
+    const scaleX = wrapper.clientWidth / 1600;
+    const scaleY = wrapper.clientHeight / 900;
+    const scale = Math.min(scaleX, scaleY);
+    board.style.transform = `scale(${scale})`;
+}
 
+scaleBoard();
+window.addEventListener('resize', scaleBoard);

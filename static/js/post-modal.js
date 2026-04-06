@@ -26,6 +26,7 @@ function openPostModal(userName, userColor) {
     pendingColor = userColor;
 
     modal.classList.add('show');
+    document.body.classList.add('is-posting');
     setTimeout(() => input.focus(), 100);
 
     input.oninput = () => {
@@ -47,6 +48,7 @@ function openPostModal(userName, userColor) {
 
 function closePostModal() {
     document.getElementById('post-modal').classList.remove('show');
+    document.body.classList.remove('is-posting');
     document.getElementById('post-input').oninput = null;
 }
 

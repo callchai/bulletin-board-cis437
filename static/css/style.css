@@ -16,11 +16,24 @@ html, body {
 }
 
 /* board style */
-#board {
+/* 4/5--added wrapper to keep board size consistent across monitor sizes*/
+#board-wrapper {
     width: 100%;
     height: calc(100vh - 56px);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: #eee;
+}
+
+#board {
+    width: 1600px;
+    height: 900px;
+    flex-shrink: 0;
     position: relative;
     overflow: hidden;
+    transform-origin: top left;
     background: #f5f0e8;
     background-image: radial-gradient(#d0c8b8 1px, transparent 1px);
     background-size: 28px 28px;
@@ -769,7 +782,8 @@ html, body {
     z-index: 10;
 }
 
-body.is-placing .sticky:hover {
+body.is-placing .sticky:hover,
+body.is-posting .sticky:hover {
     outline: none;
     z-index: auto;
 }
