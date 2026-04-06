@@ -18,20 +18,18 @@ html, body {
 /* board style */
 /* 4/5--added wrapper to keep board size consistent across monitor sizes*/
 #board-wrapper {
-    width: 100%;
-    height: calc(100vh - 56px);
+    /* width: 100%;
+    height: calc(100vh - 56px);*/
     overflow: hidden;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    position: relative;
     background: #eee;
 }
 
 #board {
     width: 1600px;
     height: 900px;
-    flex-shrink: 0;
-    position: relative;
+    position: absolute;
+    top: 0; left: 0;
     overflow: hidden;
     transform-origin: top left;
     background: #f5f0e8;

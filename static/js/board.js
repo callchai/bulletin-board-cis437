@@ -196,10 +196,17 @@ consistent across different resolutions.
 function scaleBoard() {
     const wrapper = document.getElementById('board-wrapper');
     const board = document.getElementById('board');
-    const scaleX = wrapper.clientWidth / 1600;
-    const scaleY = wrapper.clientHeight / 900;
+    const availW = window.innerWidth;
+    const availH = window.innerHeight - 56;
+    const scaleX = availW / 1600;
+    const scaleY = availH / 900;
     const scale = Math.min(scaleX, scaleY);
+
     board.style.transform = `scale(${scale})`;
+
+    // TEST THIS --> Make sure it gets rid of random dead white space
+    wrapper.style.width = Math.round(1600 * scale) + 'px';
+    wrapper.style.height = Math.round(900 * scale) + 'px';
 }
 
 scaleBoard();
