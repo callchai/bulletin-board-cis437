@@ -21,11 +21,9 @@ body {
 /* board style */
 /* 4/5--added wrapper to keep board size consistent across monitor sizes*/
 #board-wrapper {
-    /* width: 100%;
-    height: calc(100vh - 56px);*/
     overflow: hidden;
     position: relative;
-    background: #eee;
+    background: #f5f0e8;
     flex: 1;
 }
 

@@ -207,15 +207,12 @@ function scaleBoard() {
     const availH = wrapper.clientHeight;
     const scaleX = availW / 1600;
     const scaleY = availH / 900;
-    const scale = Math.min(scaleX, scaleY);
+    const scale = Math.max(scaleX, scaleY);
 
     board.style.transform = `scale(${scale})`;
     board.style.transformOrigin = 'top left';
-
-    const scaledW = 1600 * scale;
-    const scaledH = 900 * scale;
-    board.style.left = Math.max(0, (availW - scaledW) / 2) + 'px';
-    board.style.top = Math.max(0, (availH - scaledH) / 2) + 'px';
+    board.style.left = '0px';
+    board.style.top = '0px';
 }
 
 scaleBoard();
