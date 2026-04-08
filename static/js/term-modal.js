@@ -122,9 +122,8 @@ function showWelcomeModal() {
 enterBtn.addEventListener('click', () => {
     const welcomeModal = document.getElementById('welcome-modal');
     welcomeModal.classList.remove('show');
-    setTimeout(() => {
-        welcomeModal.style.display = 'none';
-    }, 300);
+    setTimeout(() => { welcomeModal.style.display = 'none'; }, 300);
+    showScreenToast();
 });
 
 function showWelcomeBackModal() {
@@ -135,9 +134,8 @@ function showWelcomeBackModal() {
 
     document.getElementById('welcomeback-enter').addEventListener('click', () => {
         modal.classList.remove('show');
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
+        showScreenToastSizeWarning();
     });
 }
 
@@ -155,3 +153,11 @@ if (!getCookie(aliasCookieName)) {
     showWelcomeBackModal();
 }
 
+function showScreenToastSizeWarning() {
+    const toast = document.getElementById('screen-toast-size-warning');
+    setTimeout(() => toast.classList.add('show'), 400);
+    setTimeout(() => toast.classList.remove('show'), 5000);
+    document.getElementById('toast-size-warning-close').addEventListener('click', () => {
+        toast.classList.remove('show');
+    });
+}
