@@ -117,6 +117,7 @@ function showWelcomeModal() {
 
     const welcomeModal = document.getElementById('welcome-modal');
     welcomeModal.classList.add('show');
+    showScreenToastSizeWarning();
 }
 
 enterBtn.addEventListener('click', () => {
