@@ -139,6 +139,7 @@ function updateSizePreview() {
     const dot = document.getElementById('size-preview-dot');
     dot.style.width = size + 'px';
     dot.style.height = size + 'px';
+    dot.style.background = document.getElementById('draw-color').value;
 }
 
 async function submitDrawing() {

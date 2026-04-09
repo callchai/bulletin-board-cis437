@@ -749,6 +749,13 @@ body {
     transition: transform 0.2s ease;
 }
 
+#view-note.is-drawing {
+    min-width: 480px;
+    max-width: 520px;
+    min-height: 360px;
+    max-height: 520px;
+}
+
 #view-modal.show #view-note {
     transform: scale(1);
 }
@@ -888,6 +895,16 @@ body.is-posting .sticky:hover {
     outline: 2px solid #d4af37;
     box-shadow: 0 0 12px rgba(212,175,55,0.6);
     z-index: 100 !important;
+}
+
+.sticky::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 32px;
+    background: linear-gradient(transparent, var(--note-bg, #fff9a3));
+    pointer-events: none;
+    border-radius: 0 0 2px 2px;
 }
 
 /* tiny warning for small screen size */

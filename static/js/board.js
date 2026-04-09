@@ -113,6 +113,7 @@ function renderNote(p) {
     note.className = 'sticky';
     note.dataset.id = p.id;
     note.style.cssText = `left:${p.x}px;top:${p.y}px;background:${p.color.bg};z-index:${p.zIndex || 1};`;
+    note.style.setProperty('--note-bg', p.color.bg);
 
     if (p.type === 'drawing' && p.imageUrl) {
         note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>
@@ -137,6 +138,7 @@ function openViewModal(p) {
     } else {
         viewText.textContent = p.text || '';
     }
+    note.classList.toggle('is-drawing', p.type === 'drawing');
     note.style.background = p.color.bg;
 
     const tsEl = document.getElementById('view-timestamps');
