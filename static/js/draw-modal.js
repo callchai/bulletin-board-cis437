@@ -73,7 +73,7 @@ function clearDrawCanvas(bgColor) {
 
 function openDrawMode(userColor) {
     clearDrawCanvas(userColor.bg);
-    document.getElementById('draw-panel').style.display = 'flex';
+    document.getElementById('draw-panel').style.cssText = 'display:flex; flex-direction:column; gap:12px;';
     document.getElementById('post-editor').style.display = 'none';
     document.getElementById('color-wheel-wrap').style.display = 'none';
     initDrawCanvas();

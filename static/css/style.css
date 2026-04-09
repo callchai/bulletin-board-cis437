@@ -1074,3 +1074,7 @@ body.is-posting .sticky:hover {
 .color-wheel-swatch:hover {
     transform: scale(1.2);
 }
+#view-timestamps {
+    margin-top: 0;
+    line-height: 1.4;
+}
