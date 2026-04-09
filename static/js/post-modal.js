@@ -99,5 +99,4 @@ document.getElementById('post-confirm').addEventListener('click', () => {
     startPlacing(text, pendingColor);
 });
 
-document.getElementById('btn-draw').addEventListener('click', () => {});
 document.getElementById('btn-image').addEventListener('click', () => {});

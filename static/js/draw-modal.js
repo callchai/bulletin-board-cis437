@@ -75,6 +75,7 @@ function openDrawMode(userColor) {
     clearDrawCanvas(userColor.bg);
     document.getElementById('draw-panel').style.display = 'flex';
     document.getElementById('post-editor').style.display = 'none';
+    document.getElementById('color-wheel-wrap').style.display = 'none';
     initDrawCanvas();
     updateSizePreview();
 }
@@ -82,6 +83,7 @@ function openDrawMode(userColor) {
 function closeDrawMode() {
     document.getElementById('draw-panel').style.display = 'none';
     document.getElementById('post-editor').style.display = 'flex';
+    document.getElementById('color-wheel-wrap').style.display = '';
     drawHistory = [];
     canvasInitialized = false;
 }
