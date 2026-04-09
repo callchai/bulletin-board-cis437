@@ -27,9 +27,13 @@ function initBoard(userName, userColor) {
             }, 1000);
         });
 
-    fetch('/api/posts')
-        .then(r => r.json())
-        .then(posts => posts.forEach(p => renderNote(p)));
+    const renderAll = (posts) => posts.forEach(p => renderNote(p));
+    if (window._preloadedPosts) {
+        renderAll(window._preloadedPosts);
+        delete window._preloadedPosts;
+    } else {
+        fetch('/api/posts').then(r => r.json()).then(renderAll);
+    }
 
 
     document.getElementById('add-btn').addEventListener('click', () => {
@@ -125,7 +129,12 @@ function openViewModal(p) {
     const note = document.getElementById('view-note');
     document.getElementById('view-author').style.color = p.color.author;
     document.getElementById('view-author').textContent = p.author;
-    document.getElementById('view-text').textContent = p.text;
+    const viewText = document.getElementById('view-text');
+    if (p.type === 'drawing' && p.imageUrl) {
+        viewText.innerHTML = `<img src="${p.imageUrl}" style="width:100%;border-radius:2px;display:block;" />`;
+    } else {
+        viewText.textContent = p.text || '';
+    }
     note.style.background = p.color.bg;
 
     const tsEl = document.getElementById('view-timestamps');

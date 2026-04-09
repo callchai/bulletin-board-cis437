@@ -139,6 +139,10 @@ function showWelcomeBackModal() {
         showScreenToastSizeWarning();
     });
 }
+// Test: this should load drawings
+fetch('/api/posts', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(posts => { window._preloadedPosts = posts; });
 
 if (!getCookie(aliasCookieName)) {
     termsModal.classList.add('show');

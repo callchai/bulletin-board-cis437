@@ -35,11 +35,19 @@ function initDrawCanvas() {
     });
 
     drawCanvas.addEventListener('mouseup', () => {
-        if (painting) { painting = false; saveDrawState(); }
+        if (painting) {
+            painting = false;
+            drawCtx.closePath();
+            saveDrawState();
+        }
     });
 
     drawCanvas.addEventListener('mouseleave', () => {
-        if (painting) { painting = false; saveDrawState(); }
+        if (painting) {
+            painting = false;
+            drawCtx.closePath();
+            saveDrawState();
+        }
     });
 }
 
@@ -76,7 +84,15 @@ function openDrawMode(userColor) {
     document.getElementById('post-editor').style.display = 'none';
     document.getElementById('color-wheel-wrap').style.display = 'none';
     initDrawCanvas();
-    clearDrawCanvas(userColor.bg);
+    const bgPicker = document.getElementById('draw-bg-color');
+    bgPicker.value = userColor.bg.length === 7 ? userColor.bg : '#fff9a3';
+    clearDrawCanvas(bgPicker.value);
+    bgPicker.oninput = () => {
+        const saved = drawHistory[drawHistory.length - 1];
+        drawCtx.fillStyle = bgPicker.value;
+        drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+        if (saved) drawCtx.putImageData(saved, 0, 0);
+    };
     updateSizePreview();
 }
 
@@ -143,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('draw-undo').addEventListener('click', undoDraw);
 
     document.getElementById('draw-clear').addEventListener('click', () => {
-        const bg = pendingColor ? pendingColor.bg : '#fff9a3';
+        const bg = document.getElementById('draw-bg-color').value || '#fff9a3';
         clearDrawCanvas(bg);
     });
 
