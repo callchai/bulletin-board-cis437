@@ -124,7 +124,7 @@ enterBtn.addEventListener('click', () => {
     const welcomeModal = document.getElementById('welcome-modal');
     welcomeModal.classList.remove('show');
     setTimeout(() => { welcomeModal.style.display = 'none'; }, 300);
-    showScreenToast();
+    showScreenToastSizeWarning();
 });
 
 function showWelcomeBackModal() {
