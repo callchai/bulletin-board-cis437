@@ -1156,7 +1156,6 @@ body.is-posting .sticky:hover {
     white-space: nowrap;
     box-shadow: 0 0 30px rgba(255, 60, 0, 0.7), 0 4px 20px rgba(0,0,0,0.5);
     transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    animation: trialBannerPulse 2s ease-in-out infinite;
 }
 
 #trial-banner.show {
@@ -1172,7 +1171,7 @@ body.is-posting .sticky:hover {
     width: 100%;
     background: #ffd700;
     border-radius: 0 0 12px 12px;
-    animation: trialBannerTimer 4s linear infinite;
+    animation: trialBannerTimer 30s linear forwards;
 }
 
 @keyframes trialBannerTimer {
@@ -1582,7 +1581,6 @@ body.is-posting .sticky:hover {
     color: #cc0000;
     margin-bottom: 20px;
     display: block;
-    animation: crossPulse 2s ease-in-out infinite;
 }
 
 @keyframes crossPulse {

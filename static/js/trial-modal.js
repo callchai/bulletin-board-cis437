@@ -2,6 +2,20 @@ const TRIAL_SCORE_THRESHOLD = -2;
 const TRIAL_VOTE_SECONDS = 30;
 const EXILE_MINUTES = 5;
 
+const BANISHMENT_QUOTES = [
+    `"The Board giveth, and the Board taketh away."`,
+    `"You have sown wickedness, and so you shall reap the whirlwind."`,
+    `"Depart from me, ye who break the commandments."`,
+    `"Even the fallen may yet repent. But not today."`,
+];
+
+const EXILE_QUOTES = [
+    `"Go, and sin no more."`,
+    `"The Board's grace is not without limit. Remember this."`,
+    `"Your penance begins now. Use it wisely."`,
+    `"Even the wicked may find redemption, if they truly seek it."`,
+];
+
 let _trialState = {
     id: null,
     status: null,
@@ -82,6 +96,8 @@ async function pollActiveTrial() {
 function showTrialBanner(status) {
     const banner = document.getElementById('trial-banner');
     if (!banner) return;
+    if (banner.classList.contains('show') && banner.dataset.status === status) return;
+    banner.dataset.status = status;
     banner.classList.add('show');
     if (status === 'pending') {
         banner.innerHTML = `<strong>A Trial has Begun!</strong> — The accused prepares their defense...`;
@@ -302,6 +318,7 @@ function _handleConcluded(trial) {
 }
 
 function _handleVerdict(verdict, accused, forgiveCount, banishCount) {
+        if (typeof cleanup === 'function') cleanup();
     document.getElementById('trial-modal')?.classList.remove('show');
     document.getElementById('defense-modal')?.classList.remove('show');
     hideTrialBanner();
@@ -339,12 +356,37 @@ function showBanishmentScreen(verdict) {
     const sub = document.getElementById('banishment-sub');
     if (verdict === 'exiled') {
         msg.textContent = 'You have been EXILED.';
-        sub.innerHTML = `The Board has cast you out for ${EXILE_MINUTES} minutes.<br><em>Take this time to repent, for you are still worthy of the Board's grace.</em>`;
+        sub.innerHTML = `The Board has cast you out for <span id="exile-countdown">${EXILE_MINUTES}:00</span> minutes.<br><em>Take this time to repent, for you are still worthy of the Board's grace.</em><br><br><span id="exile-refresh" style="opacity:0;transition:opacity 1.5s ease;font-size:0.95rem;color:#ffcc88;">Your penance is complete. Refresh the page to return to the Board.</span>`;
+        const quotes = verdict === 'exiled' ? EXILE_QUOTES : BANISHMENT_QUOTES;
+        const quote = quotes[Math.floor(Math.random() * quotes.length)];
+        const quoteEl = document.createElement('p');
+        quoteEl.style.cssText = 'margin-top:24px;font-style:italic;font-size:1rem;color:#ff9999;opacity:0.7;line-height:1.7;';
+        quoteEl.innerHTML = quote;
+        document.getElementById('banishment-content').appendChild(quoteEl);
+        if (!document.getElementById('banishment-quote')) {
+            quoteEl.id = 'banishment-quote';
+            document.getElementById('banishment-content').appendChild(quoteEl);
+        }
+        let totalSeconds = EXILE_MINUTES * 60;
+        const countdownEl = () => document.getElementById('exile-countdown');
+        const refreshEl = () => document.getElementById('exile-refresh');
+        const exileTimer = setInterval(() => {
+            totalSeconds--;
+            const m = Math.floor(totalSeconds / 60);
+            const s = String(totalSeconds % 60).padStart(2, '0');
+            if (countdownEl()) countdownEl().textContent = `${m}:${s}`;
+            if (totalSeconds <= 0) {
+                clearInterval(exileTimer);
+                if (refreshEl()) refreshEl().style.opacity = '1';
+            }
+        }, 1000);
     } else {
         msg.textContent = 'You have been BANISHED.';
         sub.textContent = `The Board and your former posters have spoken. Your wickedness has hereby been casted out. May the Board have mercy on your soul.`;
     }
     screen.classList.add('show');
+    const crossEl = document.getElementById('banishment-cross-icon');
+    if (crossEl) crossEl.style.transform = verdict === 'exiled' ? '' : 'rotate(180deg)';
 }
 
 
@@ -352,7 +394,7 @@ function showVerdictToast(verdict, accused, forgiveCount, banishCount) {
     const toast = document.getElementById('verdict-toast');
     if (!toast) return;
 
-    let icon, text;
+    let text;
     if (verdict === 'forgiven') {
         text = `<strong>${accused}</strong> has been forgiven.`;
     } else if (verdict === 'banished') {

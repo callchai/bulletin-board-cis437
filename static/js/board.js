@@ -237,6 +237,7 @@ document.getElementById('view-modal').addEventListener('click', (e) => {
 
 function cleanup() {
     placing = false; activeEl = null;
+    document.body.classList.remove('is-placing', 'is-posting');
     board.removeEventListener('mousemove', moveGhost);
     board.removeEventListener('click', dropNote);
 }
