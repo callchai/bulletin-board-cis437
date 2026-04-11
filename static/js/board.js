@@ -298,6 +298,11 @@ setInterval(() => {
                 if (!document.querySelector(`.sticky[data-id="${p.id}"]`)) {
                     renderNote(p);
                 }
+                // Add this:
+                else {
+                    const scoreEl = document.querySelector(`.sticky[data-id="${p.id}"] .note-score`);
+                    if (scoreEl) scoreEl.textContent = scoreLabel(p.score);
+                }
             });
         });
 }, 8000);

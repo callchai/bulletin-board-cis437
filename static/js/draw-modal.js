@@ -96,31 +96,20 @@ function openDrawMode(userColor) {
     bgPicker.oninput = () => {
         const newBg = bgPicker.value;
         localStorage.setItem('bb_last_draw_bg', newBg);
-
-        const strokes = drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
         _currentDrawBg = newBg;
+
+        const current = drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
         drawCtx.fillStyle = newBg;
         drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-
-        if (drawHistory.length > 0) {
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = drawCanvas.width;
-            tempCanvas.height = drawCanvas.height;
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCtx.fillStyle = newBg;
-            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-            drawHistory[0] = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-        }
-        drawCtx.putImageData(drawHistory[drawHistory.length - 1], 0, 0);
-        const offscreen = document.createElement('canvas');
-        offscreen.width = drawCanvas.width;
-        offscreen.height = drawCanvas.height;
-        const offCtx = offscreen.getContext('2d');
-        offCtx.fillStyle = newBg;
-        offCtx.fillRect(0, 0, offscreen.width, offscreen.height);
-        offCtx.drawImage(drawCanvas, 0, 0);
-        drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-        drawCtx.drawImage(offscreen, 0, 0);
+        // Recomposite strokes over new bg
+        const temp = document.createElement('canvas');
+        temp.width = drawCanvas.width;
+        temp.height = drawCanvas.height;
+        temp.getContext('2d').putImageData(current, 0, 0);
+        drawCtx.globalCompositeOperation = 'multiply';
+        drawCtx.drawImage(temp, 0, 0);
+        drawCtx.globalCompositeOperation = 'source-over';
+        saveDrawState();
     };
 
     updateSizePreview();
