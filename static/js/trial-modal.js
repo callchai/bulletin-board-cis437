@@ -40,7 +40,6 @@ async function pollActiveTrial() {
         const res = await fetch('/api/trials/active');
         const trial = await res.json();
         if (!trial) {
-            // No active trial
             if (_trialState.id) _clearTrialState();
             hideTrialBanner();
             return;
@@ -85,10 +84,9 @@ function showTrialBanner(status) {
     if (!banner) return;
     banner.classList.add('show');
     if (status === 'pending') {
-        banner.innerHTML = `⚖️ <strong>ECCLESIASTICAL TRIAL IN PROGRESS</strong> — The accused prepares their defense...
-            <button onclick="document.getElementById('trial-modal').classList.add('show')" id="trial-banner-watch">Observe</button>`;
+        banner.innerHTML = `<strong>A Trial has Begun!</strong> — The accused prepares their defense...`;
     } else {
-        banner.innerHTML = `⚖️ <strong>ECCLESIASTICAL TRIAL IN PROGRESS</strong> — Cast your judgment upon the transgressor!
+        banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong> — Cast your judgment upon the transgressor!
             <button onclick="document.getElementById('trial-modal').classList.add('show')" id="trial-banner-watch">Join Trial</button>`;
     }
 }
@@ -111,6 +109,22 @@ function showDefenseModal(trialId) {
     textarea.value = '';
     wordCount.textContent = '0 / 100 words';
     submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Defense (30)';
+
+    let defenseSecondsLeft = 30;
+    /* This prevents hostage taking of the trial */
+    const defenseTimer = setInterval(() => {
+        defenseSecondsLeft--;
+        if (defenseSecondsLeft <= 0) {
+            clearInterval(defenseTimer);
+            _submitDefense(trialId, textarea.value.trim(), modal, submitBtn);
+        } else {
+            submitBtn.textContent = `Submit Defense (${defenseSecondsLeft})`;
+            if (defenseSecondsLeft <= 10) {
+                submitBtn.style.background = 'linear-gradient(to bottom, #ff4444, #cc0000)';
+            }
+        }
+    }, 1000);
 
     textarea.oninput = () => {
         const words = textarea.value.trim() ? textarea.value.trim().split(/\s+/).length : 0;
@@ -119,22 +133,28 @@ function showDefenseModal(trialId) {
     };
 
     submitBtn.onclick = () => {
+        clearInterval(defenseTimer);
         const defense = textarea.value.trim();
         const words = defense ? defense.split(/\s+/).length : 0;
         if (words > 100) return;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-        fetch(`/api/trials/${trialId}/defense`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ defense })
-        })
-        .then(r => r.json())
-        .then(() => {
-            modal.classList.remove('show');
-            submitBtn.textContent = 'Submit Defense';
-        });
+        _submitDefense(trialId, defense, modal, submitBtn);
     };
+}
+
+function _submitDefense(trialId, defense, modal, submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.style.background = '';
+    fetch(`/api/trials/${trialId}/defense`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ defense })
+    })
+    .then(r => r.json())
+    .then(() => {
+        modal.classList.remove('show');
+        submitBtn.textContent = 'Submit Defense';
+    });
 }
 
 
@@ -175,8 +195,8 @@ function showTrialModal(trial) {
             <div class="trial-header-text">
                 <span class="trial-gavel">⚖️</span>
                 <h2>Ecclesiastical Trial</h2>
-                <p class="trial-subtext">A poster has committed a transgression against the Board.<br>They are left at the mercy of their fellow posters.</p>
-            </div>
+                <p class="trial-subtext">A poster has committed a transgression against the Board.<br><strong style="color:#8b0000;">${_trialState.accused}</strong> is left at the mercy of their fellow posters.</p>
+                </div>
             <div class="trial-content-cols">
                 <div class="trial-left">
                     <div class="trial-section-label">The Offending Post</div>
@@ -187,8 +207,8 @@ function showTrialModal(trial) {
                     <div class="trial-section-label">Judgment</div>
                     <div id="trial-timer-display" class="trial-timer">30</div>
                     <div class="trial-vote-counts">
-                        <div class="trial-forgive-count">🕊️ Forgive: <strong id="trial-forgive-num">0</strong></div>
-                        <div class="trial-banish-count">🔥 Banish: <strong id="trial-banish-num">0</strong></div>
+                        <div class="trial-forgive-count">Forgive: <strong id="trial-forgive-num">0</strong></div>
+                        <div class="trial-banish-count">Banish: <strong id="trial-banish-num">0</strong></div>
                     </div>
                     ${isAccused
                         ? `<div class="trial-accused-notice">You are the accused. You may not vote.</div>`

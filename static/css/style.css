@@ -1163,6 +1163,23 @@ body.is-posting .sticky:hover {
     bottom: 24px;
 }
 
+#trial-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: #ffd700;
+    border-radius: 0 0 12px 12px;
+    animation: trialBannerTimer 4s linear infinite;
+}
+
+@keyframes trialBannerTimer {
+    from { width: 100%; }
+    to   { width: 0%; }
+}
+
 @keyframes trialBannerPulse {
     0%, 100% { box-shadow: 0 0 30px rgba(255,60,0,0.7), 0 4px 20px rgba(0,0,0,0.5); }
     50%       { box-shadow: 0 0 50px rgba(255,60,0,1),   0 4px 30px rgba(0,0,0,0.6); }

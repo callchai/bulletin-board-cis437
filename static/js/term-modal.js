@@ -151,11 +151,19 @@ if (!getCookie(aliasCookieName)) {
         termsModal.classList.remove('show');
         setTimeout(() => {
             termsModal.style.display = 'none';
-            showWelcomeModal(); // show welcome next
+            showWelcomeModal();
         }, 300);
         });
 } else {
-    showWelcomeBackModal();
+    fetch(`/api/banned/${encodeURIComponent(name)}`)
+        .then(r => r.json())
+        .then(res => {
+            if (res.banned) {
+                showBanishmentScreen(res.reason);
+            } else {
+                showWelcomeBackModal();
+            }
+        });
 }
 
 function showScreenToastSizeWarning() {
