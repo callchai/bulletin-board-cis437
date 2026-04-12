@@ -68,19 +68,11 @@ async function pollActiveTrial() {
             _trialState.defense = trial.defense;
             _trialState.startedAt = trial.startedAt;
             _trialState.userVote = null;
+            document.getElementById('trial-banner')?.style.setProperty('--timer-pct', '100%');
         }
 
         _trialState.status = trial.status;
         _trialState.votes = trial.votes || {};
-        if (_trialState.id !== trial.id) {
-            _trialState.id = trial.id;
-            _trialState.accused = trial.accused;
-            _trialState.postData = trial.postData;
-            _trialState.defense = trial.defense;
-            _trialState.startedAt = trial.startedAt;
-            _trialState.userVote = null;
-            document.getElementById('trial-banner')?.style.setProperty('--timer-pct', '100%');
-        }
 
         if (trial.status === 'pending') {
             showTrialBanner('pending');
@@ -110,6 +102,7 @@ function showTrialBanner(status) {
     banner.dataset.status = status;
     banner.classList.add('show');
     if (status === 'pending') {
+        banner.style.setProperty('--timer-pct', '100%');
         banner.innerHTML = `<strong>A Trial has Begun!</strong> — The accused prepares their defense...`;
     } else {
         banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong> — Cast your judgment upon the transgressor!
@@ -372,12 +365,17 @@ function showBanishmentScreen(verdict) {
         const quoteEl = document.createElement('p');
         quoteEl.style.cssText = 'margin-top:24px;font-style:italic;font-size:1rem;color:#ff9999;opacity:0.7;line-height:1.7;';
         quoteEl.innerHTML = quote;
-        document.getElementById('banishment-content').appendChild(quoteEl);
         if (!document.getElementById('banishment-quote')) {
             quoteEl.id = 'banishment-quote';
             document.getElementById('banishment-content').appendChild(quoteEl);
         }
-        let totalSeconds = EXILE_MINUTES * 60;
+        const storageKey = `exile_until_${currentUserName}`;
+        let exileUntil = parseInt(localStorage.getItem(storageKey));
+        if (!exileUntil || exileUntil < Date.now()) {
+            exileUntil = Date.now() + EXILE_MINUTES * 60 * 1000;
+            localStorage.setItem(storageKey, exileUntil);
+        }
+        let totalSeconds = Math.max(0, Math.floor((exileUntil - Date.now()) / 1000));
         const countdownEl = () => document.getElementById('exile-countdown');
         const refreshEl = () => document.getElementById('exile-refresh');
         const exileTimer = setInterval(() => {

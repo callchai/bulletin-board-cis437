@@ -127,10 +127,11 @@ function renderNote(p) {
         note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${p.text}<div class="note-score" style="color:${p.color.author}">${scoreLabel(p.score)}</div>`;
     }
 
-    note.addEventListener('click', () => openViewModal(p));
     board.appendChild(note);
     if (p.denounced) {
         _denounceNoteElement(note, 'banished');
+    } else {
+        note.addEventListener('click', () => openViewModal(p));
     }
 }
 
