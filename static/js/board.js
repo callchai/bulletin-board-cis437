@@ -306,7 +306,7 @@ setInterval(() => {
                     const scoreEl = document.querySelector(`.sticky[data-id="${p.id}"] .note-score`);
                     if (scoreEl) scoreEl.textContent = scoreLabel(p.score);
                     const noteEl = document.querySelector(`.sticky[data-id="${p.id}"]`);
-                    if (noteEl) noteEl.onclick = () => openViewModal(p);
+                    if (noteEl && noteEl.dataset.denounced !== 'true') noteEl.onclick = () => openViewModal(p);
                 }
             });
         });

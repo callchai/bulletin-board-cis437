@@ -347,6 +347,8 @@ function _handleVerdict(verdict, accused, forgiveCount, banishCount) {
 function _denounceNoteElement(el, verdict) {
     el.style.background = '#000';
     el.style.setProperty('--note-bg', '#000');
+    el.style.cursor = 'default';
+    el.style.pointerEvents = 'none';
     el.dataset.denounced = 'true';
     el.innerHTML = `<div class="denounce-full-label">HERETIC HAS BEEN DENOUNCED BY THE BOARD</div>`;
 }
@@ -360,15 +362,6 @@ function showBanishmentScreen(verdict) {
     if (verdict === 'exiled') {
         msg.textContent = 'You have been EXILED.';
         sub.innerHTML = `The Board has cast you out for <span id="exile-countdown">${EXILE_MINUTES}:00</span> minutes.<br><em>Take this time to repent, for you are still worthy of the Board's grace.</em><br><br><span id="exile-refresh" style="opacity:0;transition:opacity 1.5s ease;font-size:0.95rem;color:#ffcc88;">Your penance is complete. Refresh the page to return to the Board.</span>`;
-        const quotes = verdict === 'exiled' ? EXILE_QUOTES : BANISHMENT_QUOTES;
-        const quote = quotes[Math.floor(Math.random() * quotes.length)];
-        const quoteEl = document.createElement('p');
-        quoteEl.style.cssText = 'margin-top:24px;font-style:italic;font-size:1rem;color:#ff9999;opacity:0.7;line-height:1.7;';
-        quoteEl.innerHTML = quote;
-        if (!document.getElementById('banishment-quote')) {
-            quoteEl.id = 'banishment-quote';
-            document.getElementById('banishment-content').appendChild(quoteEl);
-        }
         const storageKey = `exile_until_${currentUserName}`;
         let exileUntil = parseInt(localStorage.getItem(storageKey));
         if (!exileUntil || exileUntil < Date.now()) {
@@ -385,6 +378,7 @@ function showBanishmentScreen(verdict) {
             if (countdownEl()) countdownEl().textContent = `${m}:${s}`;
             if (totalSeconds <= 0) {
                 clearInterval(exileTimer);
+                localStorage.removeItem(storageKey);
                 if (refreshEl()) refreshEl().style.opacity = '1';
             }
         }, 1000);
@@ -392,11 +386,20 @@ function showBanishmentScreen(verdict) {
         msg.textContent = 'You have been BANISHED.';
         sub.textContent = `The Board and your former posters have spoken. Your wickedness has hereby been casted out. May the Board have mercy on your soul.`;
     }
+    if (!document.getElementById('banishment-quote')) {
+        const quotes = verdict === 'exiled' ? EXILE_QUOTES : BANISHMENT_QUOTES;
+        const quote = quotes[Math.floor(Math.random() * quotes.length)];
+        const quoteEl = document.createElement('p');
+        quoteEl.id = 'banishment-quote';
+        quoteEl.style.cssText = 'margin-top:24px;font-style:italic;font-size:1rem;color:#ff9999;opacity:0.7;line-height:1.7;';
+        quoteEl.innerHTML = quote;
+        document.getElementById('banishment-content').appendChild(quoteEl);
+    }
+
     screen.classList.add('show');
     const crossEl = document.getElementById('banishment-cross-icon');
     if (crossEl) crossEl.style.transform = verdict === 'exiled' ? '' : 'rotate(180deg)';
 }
-
 
 function showVerdictToast(verdict, accused, forgiveCount, banishCount) {
     const toast = document.getElementById('verdict-toast');
@@ -453,18 +456,6 @@ function showTrialBanner(status) {
     } else {
         banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong> — Cast your judgment upon the transgressor!
             <button onclick="document.getElementById('trial-modal').classList.add('show')" id="trial-banner-watch">Join Trial</button>`;
-        _startBannerTimer();
     }
 }
 
-function _startBannerTimer() {
-    if (_bannerTimerInterval) return;
-    _bannerTimerInterval = setInterval(() => {
-        if (!_trialState.startedAt) return;
-        const elapsed = (Date.now() - _trialState.startedAt) / 1000;
-        const pct = Math.max(0, ((TRIAL_VOTE_SECONDS - elapsed) / TRIAL_VOTE_SECONDS) * 100);
-        const banner = document.getElementById('trial-banner');
-        if (banner) banner.style.setProperty('--timer-pct', pct + '%');
-        if (pct === 0) { clearInterval(_bannerTimerInterval); _bannerTimerInterval = null; }
-    }, 200);
-}

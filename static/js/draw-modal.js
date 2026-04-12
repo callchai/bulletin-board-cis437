@@ -95,15 +95,14 @@ function openDrawMode(userColor) {
 
     bgPicker.oninput = () => {
         const newBg = bgPicker.value;
+        if (hasDrawingContent()) {
+            if (!confirm('Changing the background will erase your drawing. Continue?')) {
+                bgPicker.value = _currentDrawBg;
+                return;
+            }
+        }
         localStorage.setItem('bb_last_draw_bg', newBg);
-        _currentDrawBg = newBg;
-        const prev = drawCtx.globalCompositeOperation;
-        drawCtx.globalCompositeOperation = 'destination-over';
-        drawCtx.fillStyle = newBg;
-        drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-        drawCtx.globalCompositeOperation = prev;
-        // update drawHistory so undo works
-        drawHistory[drawHistory.length - 1] = drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
+        clearDrawCanvas(newBg);
     };
 
     updateSizePreview();
