@@ -315,8 +315,6 @@ setInterval(() => {
 /*
 scaleBaord is another band aid fix to make board size 
 consistent across different resolutions.
-
-WE'RE ON FIX ATTEMPt 3
 */
 function scaleBoard() {
     const wrapper = document.getElementById('board-wrapper');
