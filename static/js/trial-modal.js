@@ -81,7 +81,8 @@ async function pollActiveTrial() {
             }
         } else if (trial.status === 'active') {
             showTrialBanner('active');
-            showTrialModal(trial, false);
+            const isDefendant = trial.accused === currentUserName;
+            showTrialModal(trial, isDefendant);
             if (!_trialState.timerInterval && trial.startedAt) {
                 startTrialCountdown(trial.id, trial.startedAt);
             }
