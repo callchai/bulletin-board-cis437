@@ -213,7 +213,7 @@ function showTrialModal(trial, autoShow = false) {
             <div class="trial-header-text">
                 <span class="trial-gavel">⚖️</span>
                 <h2>Ecclesiastical Trial</h2>
-                <p class="trial-subtext">A poster has committed a transgression against the Board.<br><strong style="color:#8b0000;">${_trialState.accused}</strong> is left at the mercy of their fellow posters.</p>
+                <p class="trial-subtext">A poster has been accused of committing a transgression against the Board.<br><strong style="color:#8b0000;">${_trialState.accused}</strong> is left at the mercy of their fellow posters.</p>
                 </div>
             <div class="trial-content-cols">
                 <div class="trial-left">
@@ -452,7 +452,7 @@ function showTrialBanner(status) {
         banner.innerHTML = `<strong>A Trial has Begun!</strong> — The accused prepares their defense...`;
         if (_bannerTimerInterval) { clearInterval(_bannerTimerInterval); _bannerTimerInterval = null; }
     } else {
-        banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong> — Cast your judgment upon the transgressor!
+        banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong>— Cast your judgment upon the transgressor!
             <button onclick="document.getElementById('trial-modal').classList.add('show')" id="trial-banner-watch">Join Trial</button>`;
     }
 }
