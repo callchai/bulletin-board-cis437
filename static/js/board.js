@@ -122,34 +122,19 @@ function renderNote(p) {
     note.style.setProperty('--note-bg', p.color.bg);
 
     const badgeHtml = p.fileExt ? `<div class="note-filetype-badge">.${p.fileExt}</div>` : '';
-
     if ((p.type === 'drawing' || p.type === 'image') && p.imageUrl) {
-        const isGif = p.fileExt === 'gif';
-
-        if (isGif) {
-            const canvas = document.createElement('canvas');
-            canvas.style.cssText = 'width:100%;border-radius:2px;display:block;';
-            const img = new Image();
-            img.onload = () => {
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
-                canvas.getContext('2d').drawImage(img, 0, 0);
-            };
-            img.src = p.imageUrl;
-            note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${badgeHtml}<div class="note-score" style="color:${p.color.author}">${scoreLabel(p.score)}</div>`;
-            note.insertBefore(canvas, note.querySelector('.note-score'));
-        } else {
-            note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>
-                ${badgeHtml}
-                <img src="${p.imageUrl}" style="width:100%;border-radius:2px;display:block;" />
-                <div class="note-score" style="color:${p.color.author}">${scoreLabel(p.score)}</div>`;
-        }
+        note.classList.add('is-media');
+        note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>
+            ${badgeHtml}
+            <img src="${p.imageUrl}" style="width:100%;border-radius:2px;display:block;" />
+            <div class="note-score">${scoreLabel(p.score)}</div>`;
     } else {
-        note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${p.text}<div class="note-score" style="color:${p.color.author}">${scoreLabel(p.score)}</div>`;
+        note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${p.text}<div class="note-score">${scoreLabel(p.score)}</div>`;
     }
 
     board.appendChild(note);
     if (p.score >= 5) note.classList.add('righteous');
+    if (p.score < 0) note.classList.add('sinful');
     if (p.denounced) {
         _denounceNoteElement(note, 'banished');
     } else {
@@ -332,6 +317,7 @@ setInterval(() => {
                     if (scoreEl) scoreEl.textContent = scoreLabel(p.score);
                     const noteEl = document.querySelector(`.sticky[data-id="${p.id}"]`);
                     if (noteEl) noteEl.classList.toggle('righteous', p.score >= 5);
+                    if (noteEl) noteEl.classList.toggle('sinful', p.score < 0);
                     if (noteEl && noteEl.dataset.denounced !== 'true') noteEl.onclick = () => openViewModal(p);
                 }
             });

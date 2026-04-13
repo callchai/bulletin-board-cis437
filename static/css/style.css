@@ -87,8 +87,6 @@ body {
     position: absolute;
     width: 160px;
     min-height: 160px;
-    max-height: 160px;
-    overflow: hidden;
     padding: 12px;
     border-radius: 2px;
     font-size: 13px;
@@ -102,6 +100,11 @@ body {
   font-weight: bold;
   opacity: 0.6;
   margin-bottom: 6px;
+}
+
+.sticky.is-media {
+    max-height: 220px;
+    overflow: hidden;
 }
 
 /* Terms and Conditions modal */
@@ -1102,7 +1105,9 @@ body.is-posting .sticky:hover {
     bottom: 6px;
     right: 8px;
     font-size: 10px;
-    opacity: 0.6;
+    opacity: 0.5;
+    color: rgba(0,0,0,0.45);
+    font-weight: bold;
 }
 
 #vote-bar {
@@ -1657,6 +1662,17 @@ body.is-posting .sticky:hover {
     from { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 10px 3px rgba(255, 215, 0, 0.5); }
     to   { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 20px 8px rgba(255, 215, 0, 0.85); }
 }
+/*Sinful affect*/
+.sticky.sinful {
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 10px 3px rgba(180, 0, 0, 0.45);
+    animation: sinfulGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes sinfulGlow {
+    from { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 8px 2px rgba(180, 0, 0, 0.35); }
+    to   { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 18px 6px rgba(200, 0, 0, 0.7); }
+}
+
 /* Image upload panel */
 #image-panel {
     flex-direction: column;

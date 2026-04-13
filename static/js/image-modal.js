@@ -33,6 +33,8 @@ function closeImageMode() {
     document.getElementById('image-panel').style.display = 'none';
     document.getElementById('post-editor').style.display = 'flex';
     document.getElementById('color-wheel-wrap').style.display = '';
+    document.getElementById('image-warning').style.display = 'none';
+    document.getElementById('image-preview-area').innerHTML = '';
     _imageFile = null;
     _imageExt = null;
     _imagePreviewUrl = null;
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const origDrawBtn = document.getElementById('btn-draw');
     origDrawBtn.addEventListener('click', () => {
-        if (_imageFile) closeImageMode();
+        if (document.getElementById('image-panel').style.display === 'flex') closeImageMode();
     });
 
     document.getElementById('image-file-input').addEventListener('change', (e) => {
