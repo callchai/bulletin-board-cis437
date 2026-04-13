@@ -45,6 +45,7 @@ function openPostModal(userName, userColor) {
     const previewText = document.getElementById('preview-text');
     const charCount = document.getElementById('post-char-count');
     const confirmBtn = document.getElementById('post-confirm');
+    document.getElementById('image-panel').style.display = 'none';
     document.querySelectorAll('.post-type-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-text').classList.add('active');
     document.getElementById('color-wheel-wrap').style.display = '';

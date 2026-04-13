@@ -122,15 +122,15 @@ function renderNote(p) {
     note.style.setProperty('--note-bg', p.color.bg);
 
     const badgeHtml = p.fileExt ? `<span class="note-filetype-badge">.${p.fileExt}</span>` : '';
-    const metaHtml = `<div class="note-meta-row">${metaHtml}<span class="note-score">${scoreLabel(p.score)}</span></div>`;
+    const metaHtml = `<div class="note-meta-row">${badgeHtml}<span class="note-score">${scoreLabel(p.score)}</span></div>`;
+
     if ((p.type === 'drawing' || p.type === 'image') && p.imageUrl) {
         note.classList.add('is-media');
         note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>
             ${metaHtml}
-            <img src="${p.imageUrl}" style="width:100%;border-radius:2px;display:block;" />
-            ${metaHtml}${scoreLabel(p.score)}</div>`;
+            <img src="${p.imageUrl}" style="width:100%;border-radius:2px;display:block;" />`;
     } else {
-        note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${p.text}${metaHtml}${scoreLabel(p.score)}</div>`;
+        note.innerHTML = `<div class="author" style="color:${p.color.author}">${p.author}</div>${p.text}${metaHtml}`;
     }
 
     board.appendChild(note);
