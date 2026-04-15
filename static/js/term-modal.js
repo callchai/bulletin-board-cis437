@@ -175,7 +175,7 @@ function showWelcomeBackModal() {
     document.getElementById('welcomeback-enter').addEventListener('click', () => {
         modal.classList.remove('show');
         setTimeout(() => { modal.style.display = 'none'; }, 300);
-        showScreenToastSizeWarning();
+        //showScreenToastSizeWarning();
         initBoard(name, userColor);
     });
 }
