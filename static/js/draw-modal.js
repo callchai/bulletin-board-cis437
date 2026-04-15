@@ -231,6 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasDrawingContent()) {
             if (!confirm('Switch to Text mode? Your drawing will be lost.')) return;
         }
+        if (typeof _imageFile !== 'undefined' && _imageFile) {
+            if (!confirm('Switch to Text mode? Your image selection will be lost.')) return;
+        }
         document.querySelectorAll('.post-type-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-text').classList.add('active');
         closeDrawMode();

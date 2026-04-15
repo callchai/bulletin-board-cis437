@@ -77,12 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
         openImageMode(pendingColor);
     });
 
-    document.getElementById('btn-text').addEventListener('click', () => {
-        if (_imageFile) {
-            if (!confirm('Switch to Text mode? Your image selection will be lost.')) return;
-        }
-        closeImageMode();
-    });
+    // document.getElementById('btn-text').addEventListener('click', () => {
+    //     if (_imageFile) {
+    //         if (!confirm('Switch to Text mode? Your image selection will be lost.')) return;
+    //     }
+    //     closeImageMode();
+    // });
+    // This might be causing a bug--delete later if fixed.
 
     const origDrawBtn = document.getElementById('btn-draw');
     origDrawBtn.addEventListener('click', () => {

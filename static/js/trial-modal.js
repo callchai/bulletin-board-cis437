@@ -213,8 +213,7 @@ function showTrialModal(trial, autoShow = false) {
 
         modal.querySelector('#trial-modal-body').innerHTML = `
             <div class="trial-header-text">
-                <span class="trial-gavel">⚖️</span>
-                <h2>Ecclesiastical Trial</h2>
+                <h2>Trial in the Board's Court</h2>
                 <p class="trial-subtext">A poster has been accused of committing a transgression against the Board.<br><strong style="color:#8b0000;">${_trialState.accused}</strong> is left at the mercy of their fellow posters.</p>
                 </div>
             <div class="trial-content-cols">
