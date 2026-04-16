@@ -201,8 +201,18 @@ function openViewModal(p) {
 
     modal.classList.add('show');
     const postId = p.id;
+    const postId = p.id;
     const voter = currentUserName;
     let userVote = localStorage.getItem(`vote_${postId}_${voter}`) || null;
+
+    fetch(`/api/posts/${postId}/score`, { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+            if (data && typeof data.score === 'number') {
+                p.score = data.score;
+                renderVoteButtons();
+            }
+        }).catch(() => {});
 
     function renderVoteButtons() {
         document.getElementById('vote-up').style.fontWeight = userVote === 'up' ? 'bold' : 'normal';
@@ -303,8 +313,18 @@ window.addEventListener('resize', checkScreenSize);
 
 
 // This should get new posts every second, set refresh lower for real demo
+// Now should refresh
 setInterval(() => {
-    fetch('/api/posts')
+    fetch('/api/board-start', { cache: 'no-store' })
+        .then(r => r.json())
+        .then(data => {
+            if (window._boardStartMs && data.startMs !== window._boardStartMs) {
+                location.reload();
+                return;
+            }
+        });
+
+    fetch('/api/posts', { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } })
         .then(r => r.json())
         .then(posts => {
             posts.forEach(p => {

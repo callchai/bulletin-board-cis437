@@ -1,0 +1,3 @@
+# these are the requirements for the main.py file for reset_board.
+functions-framework==3.8.2
+google-cloud-firestore>=2.19.0

@@ -1680,13 +1680,13 @@ body.is-posting .sticky:hover {
 }
 /*Sinful affect*/
 .sticky.sinful:not([data-denounced="true"]) {
-    box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 10px 3px rgba(180, 0, 0, 0.45);
-    animation: sinfulGlow 2s ease-in-out infinite alternate;
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 6px 1px rgba(180, 0, 0, 0.25);
+    animation: sinfulGlow 2.5s ease-in-out infinite alternate;
 }
 
 @keyframes sinfulGlow {
-    from { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 8px 2px rgba(180, 0, 0, 0.35); }
-    to   { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 18px 6px rgba(200, 0, 0, 0.7); }
+    from { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 4px 1px rgba(180, 0, 0, 0.18); }
+    to   { box-shadow: 2px 3px 8px rgba(0,0,0,0.15), 0 0 10px 3px rgba(200, 0, 0, 0.38); }
 }
 
 /* Image upload panel */
