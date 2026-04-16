@@ -155,7 +155,6 @@ function showWelcomeModal() {
 
     const welcomeModal = document.getElementById('welcome-modal');
     welcomeModal.classList.add('show');
-    showScreenToastSizeWarning();
 }
 
 enterBtn.addEventListener('click', () => {
@@ -175,7 +174,7 @@ function showWelcomeBackModal() {
     document.getElementById('welcomeback-enter').addEventListener('click', () => {
         modal.classList.remove('show');
         setTimeout(() => { modal.style.display = 'none'; }, 300);
-        //showScreenToastSizeWarning();
+        showScreenToastSizeWarning();
         initBoard(name, userColor);
     });
 }
@@ -188,9 +187,8 @@ fetch('/api/posts', { cache: 'no-store' })
 
 function showScreenToastSizeWarning() {
     const toast = document.getElementById('screen-toast-size-warning');
+    const closeBtn = document.getElementById('toast-size-warning-close');
     setTimeout(() => toast.classList.add('show'), 400);
     setTimeout(() => toast.classList.remove('show'), 5000);
-    document.getElementById('toast-size-warning-close').addEventListener('click', () => {
-        toast.classList.remove('show');
-    });
+    closeBtn.onclick = () => toast.classList.remove('show');
 }
