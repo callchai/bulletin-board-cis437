@@ -390,5 +390,42 @@ def _increment_banish_count():
     ref.set({'banishCount': new_count, 'status': doc.to_dict().get('status', 'idle') if doc.exists else 'idle'}, merge=True)
     return new_count
 
+@app.route('/api/flood/reset', methods=['POST'])
+def flood_reset():
+    """
+    Reset board after flood: clear posts, trials, bans, reset clock and flood state.
+    """
+
+    def delete_collection(col_ref):
+        """
+        Deletes a collection in Firestore in a batch.
+        """
+        while True:
+            docs = list(col_ref.limit(400).stream())
+            if not docs:
+                break
+            batch = db.batch()
+            for doc in docs:
+                batch.delete(doc.reference)
+            batch.commit()
+
+    delete_collection(db.collection('posts'))
+    delete_collection(db.collection('trials'))
+    delete_collection(db.collection('banned'))
+
+    db.collection('meta').document('flood').set({
+        'status': 'idle',
+        'banishCount': 0,
+        'triggeredAt': None,
+    })
+
+    now = datetime.now(timezone.utc)
+    board_ref = db.collection('meta').document('board')
+    board_doc = board_ref.get()
+    current_gen = board_doc.to_dict().get('generation', 0) if board_doc.exists else 0
+    board_ref.set({'createdAt': now, 'generation': current_gen + 1})
+
+    return jsonify({'ok': True}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)

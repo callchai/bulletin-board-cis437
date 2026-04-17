@@ -41,6 +41,13 @@ async function _pollFlood() {
         const res = await fetch('/api/flood/status', { cache: 'no-store' });
         const data = await res.json();
         if (data.status === 'triggered' && _floodState.phase === 'idle') {
+            if (data.triggeredAt) {
+                const age = Date.now() - data.triggeredAt;
+                if (age > 3 * 60 * 1000) {
+                    fetch('/api/flood/reset', { method: 'POST' }).catch(() => {});
+                    return;
+                }
+            }
             _beginFloodWarning(data.triggeredAt);
         }
     } catch (e) {

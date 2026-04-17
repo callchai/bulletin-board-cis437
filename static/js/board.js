@@ -37,7 +37,29 @@ function initBoard(userName, userColor) {
         renderAll(window._preloadedPosts);
         delete window._preloadedPosts;
     } else {
-        fetch('/api/posts').then(r => r.json()).then(renderAll);
+        fetch('/api/posts')
+            .then(posts => {
+                posts.forEach(p => {
+                    if (!document.querySelector(`.sticky[data-id="${p.id}"]`)) {
+                        renderNote(p);
+                    } else {
+                        const noteEl = document.querySelector(`.sticky[data-id="${p.id}"]`);
+                        if (!noteEl) return;
+
+                        // Sync denounced state
+                        if (p.denounced && noteEl.dataset.denounced !== 'true') {
+                            _denounceNoteElement(noteEl, 'banished');
+                            return; // skip other updates
+                        }
+
+                        const scoreEl = noteEl.querySelector('.note-score');
+                        if (scoreEl) scoreEl.textContent = scoreLabel(p.score);
+                        noteEl.classList.toggle('righteous', p.score >= 5);
+                        noteEl.classList.toggle('sinful', p.score < 0);
+                        if (noteEl.dataset.denounced !== 'true') noteEl.onclick = () => openViewModal(p);
+                    }
+                });
+            });
     }
 
 
