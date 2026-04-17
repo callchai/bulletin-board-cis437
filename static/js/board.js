@@ -8,6 +8,7 @@ function initBoard(userName, userColor) {
     currentUserName = userName;
     checkBanOnLoad();
     startTrialPolling();
+    startFloodPolling();
     fetch('/api/board-start')
         .then(r => r.json())
         .then(data => {
@@ -121,7 +122,7 @@ function renderNote(p) {
     note.style.cssText = `left:${p.x}px;top:${p.y}px;background:${p.color.bg};z-index:${p.zIndex || 1};`;
     note.style.setProperty('--note-bg', p.color.bg);
 
-    const badgeHtml = p.fileExt ? `<span class="note-filetype-badge">.${p.fileExt}</span>` : '';
+    const badgeHtml = (p.type === 'image' && p.fileExt) ? `<span class="note-filetype-badge">.${p.fileExt}</span>` : '';
     const metaHtml = `<div class="note-meta-row">${badgeHtml}<span class="note-score">${scoreLabel(p.score)}</span></div>`;
 
     if ((p.type === 'drawing' || p.type === 'image') && p.imageUrl) {

@@ -1800,3 +1800,216 @@ body.is-posting .sticky:hover {
     background: #d4af37;
     color: #fff;
 }
+
+/*
+The following is for the flood appearance and animation
+
+Had to use codepen for this: https://codepen.io/
+    - used this as a template for the bubbles: https://codepen.io/jiyangg/pen/bxPaLK
+
+And this website for the wave SVGs (https://getwaves.io/)
+and too many pages on w3schools to count (https://www.w3schools.com/)
+*/
+#flood-warning-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 10, 40, 0.82);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99990;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+
+#flood-warning-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#flood-warning-box {
+    background: #0a1628;
+    border: 3px solid #4a90d9;
+    border-radius: 18px;
+    max-width: 480px;
+    width: 90%;
+    padding: 40px 44px;
+    text-align: center;
+    color: #c8dfff;
+    box-shadow:
+        0 0 60px rgba(74, 144, 217, 0.5),
+        0 0 120px rgba(30, 80, 180, 0.3),
+        0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: floodBoxPulse 3s ease-in-out infinite;
+}
+
+@keyframes floodBoxPulse {
+    0%, 100% { box-shadow: 0 0 60px rgba(74,144,217,0.5), 0 0 120px rgba(30,80,180,0.3), 0 20px 60px rgba(0,0,0,0.6); }
+    50%       { box-shadow: 0 0 90px rgba(74,144,217,0.8), 0 0 160px rgba(30,80,180,0.5), 0 20px 60px rgba(0,0,0,0.6); }
+}
+
+#flood-warning-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    animation: floodIconBob 2s ease-in-out infinite;
+}
+
+@keyframes floodIconBob {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+}
+
+#flood-warning-title {
+    font-family: "Georgia", serif;
+    font-size: 2rem;
+    color: #7ab8f5;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(74, 144, 217, 0.8);
+}
+
+#flood-warning-text {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #a8c8f0;
+    margin-bottom: 28px;
+}
+
+#flood-warning-footer {
+    font-family: "Georgia", serif;
+    font-size: 1.1rem;
+    color: #4a90d9;
+    border-top: 1px solid rgba(74, 144, 217, 0.3);
+    padding-top: 18px;
+    letter-spacing: 0.5px;
+}
+
+#flood-warning-countdown {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #7ab8f5;
+}
+
+#flood-water {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: 99980;
+    pointer-events: none;
+    background: linear-gradient(
+        to top,
+        rgba(10, 40, 120, 0.92) 0%,
+        rgba(20, 70, 180, 0.80) 40%,
+        rgba(30, 100, 220, 0.60) 70%,
+        rgba(60, 140, 255, 0.30) 100%
+    );
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z' fill='white'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 60px;
+    mask-size: 100% 60px;
+    -webkit-mask-position: top;
+    mask-position: top;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    transition: height 0.2s linear;
+}
+
+#flood-water::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.15) 30%,
+        rgba(255,255,255,0.25) 50%,
+        rgba(255,255,255,0.15) 70%,
+        transparent 100%
+    );
+    animation: waterShimmer 3s ease-in-out infinite;
+}
+
+@keyframes waterShimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+#flood-submerged-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(160deg, #020d2e 0%, #051a5e 40%, #0a2a80 70%, #0d3399 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    z-index: 99995;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+    text-align: center;
+    padding: 40px;
+}
+
+#flood-submerged-screen.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#flood-submerged-cross {
+    font-size: 5rem;
+    color: rgba(120, 180, 255, 0.5);
+    animation: submergedCross 4s ease-in-out infinite;
+}
+
+@keyframes submergedCross {
+    0%, 100% { transform: translateY(0) rotate(0deg);   opacity: 0.5; }
+    50%       { transform: translateY(-14px) rotate(5deg); opacity: 0.8; }
+}
+
+#flood-submerged-quote {
+    font-family: "Georgia", serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: rgba(180, 215, 255, 0.85);
+    max-width: 600px;
+    line-height: 1.9;
+    transition: opacity 0.6s ease;
+    text-shadow: 0 2px 20px rgba(30, 80, 200, 0.8);
+}
+
+#flood-submerged-footer {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(100, 160, 255, 0.5);
+    animation: footerPulse 2s ease-in-out infinite;
+}
+
+@keyframes footerPulse {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; }
+}
+
+#flood-water::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,0.4) 2px, transparent 2px),
+        radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.25) 3px, transparent 3px);
+    background-size: 120px 80px, 80px 60px, 200px 100px;
+    animation: bubbleRise 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes bubbleRise {
+    0%   { background-position: 0 100%, 40px 100%, 20px 100%; }
+    100% { background-position: 0 -80px, 40px -60px, 20px -100px; }
+}

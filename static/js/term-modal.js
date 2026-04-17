@@ -78,11 +78,11 @@ const COLORS = [
         `Are you ready to post? The Board awaits your contribution. However,
         there is nothing to fear. Have faith. As long as you <strong>post accordingly and without malice,</strong> it
         will bring you and your fellow boarders favorable fortune.`,
-        `Dear Bulletin Board, I posted to you, but you still ain't callin'.<br>
-        I left my post, my name, and my number at the bottom.<br>
-        I posted two notes back in autumn, you must not have got 'em.<br>
-        There probably was a problem with the server or something.<br>
-        Sometimes I scribble the URL too sloppy when I type 'em.`,
+        // `Dear Bulletin Board, I posted to you, but you still ain't callin'.<br>
+        // I left my post, my name, and my number at the bottom.<br>
+        // I posted two notes back in autumn, you must not have got 'em.<br>
+        // There probably was a problem with the server or something.<br>
+        // Sometimes I scribble the URL too sloppy when I type 'em.`,
         /*`<strong>Let it be known:</strong> no poster shall utter the blasphemies of Lola Young, Benson Boone, or Olivia Rodrigo, for their 
         cries are an abomination to the Board, and those who speak of them shall be cast aside.`,*/
         `And the Board said, "Let there be posts," and there were posts.`,
@@ -94,11 +94,11 @@ const COLORS = [
         `I post, therefore I am.`,
         `"I have a dream, that one day, all posters will post in harmony..."`,
         `Ask not what the Board can do for you, ask what you can do for the Board.`,
-        `And then came a sound, distant first, that grew into castrophany<br>
-        So immense that it could be heard all over the board<br>
-        There was no screams, there was no time.<br>
-        The board called Monkey had spoken.<br>
-        There was only fire, and then... nothing.`,
+        //`And then came a sound, distant first, that grew into castrophany<br>
+        // So immense that it could be heard all over the board<br>
+        // There was no screams, there was no time.<br>
+        // The board called Monkey had spoken.<br>
+        // There was only fire, and then... nothing.`,
     ];
 
 /*

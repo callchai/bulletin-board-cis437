@@ -144,6 +144,25 @@ def get_active_trial():
 
 @app.route('/api/trials', methods=['POST'])
 def start_trial():
+    """
+    This starts the trial. Added new thing at start to check if a flood
+    event should be trigged.
+    If there have been two banishments, a flood is triggered instead of a third trial.
+    """
+    flood_doc = db.collection('meta').document('flood').get()
+    flood_data = flood_doc.to_dict() if flood_doc.exists else {}
+    if flood_data.get('banishCount', 0) >= 2 and flood_data.get('status') == 'idle':
+        db.collection('meta').document('flood').set({
+            'status': 'triggered',
+            'triggeredAt': firestore.SERVER_TIMESTAMP,
+            'banishCount': flood_data.get('banishCount', 2),
+        }, merge=True)
+        board_ref = db.collection('meta').document('board')
+        board_doc = board_ref.get()
+        current_gen = board_doc.to_dict().get('generation', 0) if board_doc.exists else 0
+        board_ref.update({'generation': current_gen + 1})
+        return jsonify({'flood': True}), 200
+
     existing = list(db.collection('trials').where('status', 'in', ['pending', 'active']).stream())
     if existing:
         return jsonify({'queued': True}), 200
@@ -265,6 +284,7 @@ def conclude_trial(trial_id):
             'trialId': trial_id,
         })
         _denounce_posts(accused)
+        _increment_banish_count()
 
     elif verdict == 'exiled':
         exile_until = datetime.now(timezone.utc) + timedelta(minutes=5)
@@ -340,6 +360,35 @@ def serve_image(filename):
     blob = bucket.blob(filename)
     data = blob.download_as_bytes()
     return send_file(io.BytesIO(data), mimetype=mimetype)
+
+# The following is for the flood fail safe
+@app.route('/api/flood/status', methods=['GET'])
+def flood_status():
+    doc = db.collection('meta').document('flood').get()
+    if not doc.exists:
+        return jsonify({'status': 'idle', 'banishCount': 0, 'triggeredAt': None})
+    d = doc.to_dict()
+    triggered_at = d.get('triggeredAt')
+    return jsonify({
+        'status':      d.get('status', 'idle'),
+        'banishCount': d.get('banishCount', 0),
+        'triggeredAt': int(triggered_at.timestamp() * 1000) if triggered_at else None,
+    })
+
+
+def _increment_banish_count():
+    """
+    Increments the banishment counter in meta/flood in firestore.
+    """
+    ref = db.collection('meta').document('flood')
+    doc = ref.get()
+    if doc.exists:
+        current = doc.to_dict().get('banishCount', 0)
+    else:
+        current = 0
+    new_count = current + 1
+    ref.set({'banishCount': new_count, 'status': doc.to_dict().get('status', 'idle') if doc.exists else 'idle'}, merge=True)
+    return new_count
 
 if __name__ == '__main__':
     app.run(debug=True)
