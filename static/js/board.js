@@ -347,22 +347,29 @@ setInterval(() => {
         });
 
     fetch('/api/posts', { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } })
-        .then(r => r.json())
-        .then(posts => {
-            posts.forEach(p => {
-                if (!document.querySelector(`.sticky[data-id="${p.id}"]`)) {
-                    renderNote(p);
-                } else {
-                    const scoreEl = document.querySelector(`.sticky[data-id="${p.id}"] .note-score`);
-                    if (scoreEl) scoreEl.textContent = scoreLabel(p.score);
-                    const noteEl = document.querySelector(`.sticky[data-id="${p.id}"]`);
-                    if (noteEl) noteEl.classList.toggle('righteous', p.score >= 5);
-                    if (noteEl) noteEl.classList.toggle('sinful', p.score < 0);
-                    if (noteEl && noteEl.dataset.denounced !== 'true') noteEl.onclick = () => openViewModal(p);
-                }
+            .then(r => r.json())
+            .then(posts => {
+                posts.forEach(p => {
+                    if (!document.querySelector(`.sticky[data-id="${p.id}"]`)) {
+                        renderNote(p);
+                    } else {
+                        const noteEl = document.querySelector(`.sticky[data-id="${p.id}"]`);
+                        if (!noteEl) return;
+
+                        if (p.denounced && noteEl.dataset.denounced !== 'true') {
+                            _denounceNoteElement(noteEl, 'banished');
+                            return;
+                        }
+
+                        const scoreEl = noteEl.querySelector('.note-score');
+                        if (scoreEl) scoreEl.textContent = scoreLabel(p.score);
+                        if (noteEl) noteEl.classList.toggle('righteous', p.score >= 5);
+                        if (noteEl) noteEl.classList.toggle('sinful', p.score < 0);
+                        if (noteEl && noteEl.dataset.denounced !== 'true') noteEl.onclick = () => openViewModal(p);
+                    }
+                });
             });
-        });
-}, 8000);
+    }, 8000);
 
 /*
 scaleBaord is another band aid fix to make board size 

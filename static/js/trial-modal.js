@@ -314,7 +314,7 @@ function _concludeTrial(trialId) {
 }
 
 function _handleConcluded(trial) {
-    if (_trialState.status === 'concluded') return;
+    if (_trialState.verdict === trial.verdict && _trialState.status === 'concluded') return;
     _trialState.status = 'concluded';
     clearInterval(_trialState.timerInterval);
     _trialState.timerInterval = null;

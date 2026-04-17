@@ -136,6 +136,25 @@ def get_active_trial():
     for t in trials:
         d = t.to_dict()
         d['id'] = t.id
+        
+        if d.get('status') == 'active' and d.get('startedAt'):
+            elapsed = (datetime.now(timezone.utc) - d['startedAt']).total_seconds()
+            if elapsed > 30:
+                # This is to force conclude due to potential syncing issues. 
+                from flask import url_for
+                import requests
+                votes = d.get('votes', {})
+                forgive = sum(1 for v in votes.values() if v == 'forgive')
+                banish  = sum(1 for v in votes.values() if v == 'banish')
+                if forgive > banish:   verdict = 'forgiven'
+                elif banish > forgive: verdict = 'banished'
+                else:                  verdict = 'exiled'
+                ref = db.collection('trials').document(t.id)
+                ref.update({'status': 'concluded', 'verdict': verdict, 
+                            'concludedAt': firestore.SERVER_TIMESTAMP})
+                d['status'] = 'concluded'
+                d['verdict'] = verdict
+        
         for field in ('startedAt', 'concludedAt'):
             if d.get(field):
                 d[field] = int(d[field].timestamp() * 1000)
