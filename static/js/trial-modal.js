@@ -287,7 +287,8 @@ function startTrialCountdown(trialId, startedAtMs) {
     if (_trialState.timerInterval) clearInterval(_trialState.timerInterval);
 
     _trialState.timerInterval = setInterval(() => {
-        function serverNow() { return Date.now() + (window._serverTimeOffset || 0); }
+        const serverNow = Date.now() + (window._serverTimeOffset || 0);
+        const elapsed = Math.floor((serverNow - startedAtMs) / 1000);
         const remaining = Math.max(0, TRIAL_VOTE_SECONDS - elapsed);
         const timerEl = document.getElementById('trial-timer-display');
         if (timerEl) {
@@ -445,20 +446,20 @@ function checkBanOnLoad() {
 
 let _bannerTimerInterval = null;
 
-function showTrialBanner(status) {
-    const banner = document.getElementById('trial-banner');
-    if (!banner) return;
-    if (banner.classList.contains('show') && banner.dataset.status === status) return;
-    banner.dataset.status = status;
-    banner.classList.add('show');
-    if (status === 'pending') {
-        banner.innerHTML = `<strong>A Trial has Begun!</strong> — The accused prepares their defense...`;
-        if (_bannerTimerInterval) { clearInterval(_bannerTimerInterval); _bannerTimerInterval = null; }
-    } else {
-        banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong>— Cast your judgment upon the transgressor!
-            <button onclick="document.getElementById('trial-modal').classList.add('show')" id="trial-banner-watch">Join Trial</button>`;
-    }
-}
+// function showTrialBanner(status) {
+//     const banner = document.getElementById('trial-banner');
+//     if (!banner) return;
+//     if (banner.classList.contains('show') && banner.dataset.status === status) return;
+//     banner.dataset.status = status;
+//     banner.classList.add('show');
+//     if (status === 'pending') {
+//         banner.innerHTML = `<strong>A Trial has Begun!</strong> — The accused prepares their defense...`;
+//         if (_bannerTimerInterval) { clearInterval(_bannerTimerInterval); _bannerTimerInterval = null; }
+//     } else {
+//         banner.innerHTML = `<strong>TRIAL IN PROGRESS</strong>— Cast your judgment upon the transgressor!
+//             <button onclick="document.getElementById('trial-modal').classList.add('show')" id="trial-banner-watch">Join Trial</button>`;
+//     }
+// }
 
 /* This function is allow a full screen
 makes the trial screen easier to read
