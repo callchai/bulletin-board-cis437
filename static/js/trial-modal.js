@@ -82,6 +82,7 @@ async function pollActiveTrial() {
                 showDefenseModal(trial.id);
             }
         } else if (trial.status === 'active') {
+            if (_trialState.status === 'concluding') return;
             showTrialBanner('active');
             const isDefendant = trial.accused === currentUserName;
             showTrialModal(trial, isDefendant);
@@ -298,6 +299,7 @@ function startTrialCountdown(trialId, startedAtMs) {
         if (remaining === 0) {
             clearInterval(_trialState.timerInterval);
             _trialState.timerInterval = null;
+            _trialState.status = 'concluding';
             _concludeTrial(trialId);
         }
     }, 500);
