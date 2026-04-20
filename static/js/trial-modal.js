@@ -287,7 +287,7 @@ function startTrialCountdown(trialId, startedAtMs) {
     if (_trialState.timerInterval) clearInterval(_trialState.timerInterval);
 
     _trialState.timerInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startedAtMs) / 1000);
+        function serverNow() { return Date.now() + (window._serverTimeOffset || 0); }
         const remaining = Math.max(0, TRIAL_VOTE_SECONDS - elapsed);
         const timerEl = document.getElementById('trial-timer-display');
         if (timerEl) {
@@ -314,7 +314,8 @@ function _concludeTrial(trialId) {
 }
 
 function _handleConcluded(trial) {
-    if (_trialState.verdict === trial.verdict && _trialState.status === 'concluded') return;
+    if (_trialState.status === 'concluded') return;
+    // if (_trialState.verdict === trial.verdict && _trialState.status === 'concluded') return;
     _trialState.status = 'concluded';
     clearInterval(_trialState.timerInterval);
     _trialState.timerInterval = null;

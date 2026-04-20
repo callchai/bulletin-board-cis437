@@ -1902,9 +1902,10 @@ and too many pages on w3schools to count (https://www.w3schools.com/)
     pointer-events: none;
     background: linear-gradient(
         to top,
-        rgba(10, 40, 120, 0.92) 0%,
-        rgba(20, 70, 180, 0.80) 40%,
-        rgba(30, 100, 220, 0.60) 70%,
+        rgba(5, 20, 80, 0.97) 0%,
+        rgba(10, 40, 120, 0.92) 20%,
+        rgba(20, 70, 180, 0.80) 50%,
+        rgba(30, 100, 220, 0.60) 75%,
         rgba(60, 140, 255, 0.30) 100%
     );
     transition: height 0.2s linear;
@@ -1914,7 +1915,7 @@ and too many pages on w3schools to count (https://www.w3schools.com/)
 #flood-water::before {
     content: '';
     position: absolute;
-    top: -40px;
+    top: -38px;
     left: 0;
     width: 200%;
     height: 60px;

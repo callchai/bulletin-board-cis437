@@ -8,6 +8,15 @@ async function checkGenerationAndInit() {
     const data = await res.json();
     const serverGen = data.generation || 0;
     const clientGen = parseInt(getCookie('bb_generation') || '-1');
+    const fetchStart = Date.now();
+    const [boardRes, nowRes] = await Promise.all([
+        fetch('/api/board-start'),
+        fetch('/api/now')
+    ]);
+    const data = await boardRes.json();
+    const nowData = await nowRes.json();
+    const rtt = Date.now() - fetchStart;
+    window._serverTimeOffset = nowData.nowMs - (fetchStart + rtt / 2);
 
     if (clientGen !== serverGen) {
         setCookie('bb_alias', '');

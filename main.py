@@ -446,5 +446,13 @@ def flood_reset():
 
     return jsonify({'ok': True}), 200
 
+@app.route('/api/now', methods=['GET'])
+def server_now():
+    """
+    This is an attempt to make syncing issues less bad.
+    """
+    now = datetime.now(timezone.utc)
+    return jsonify({'nowMs': int(now.timestamp() * 1000)})
+
 if __name__ == '__main__':
     app.run(debug=True)

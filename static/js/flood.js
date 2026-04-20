@@ -42,7 +42,7 @@ async function _pollFlood() {
         const data = await res.json();
         if (data.status === 'triggered' && _floodState.phase === 'idle') {
             if (data.triggeredAt) {
-                const age = Date.now() - data.triggeredAt;
+                function serverNow() { return Date.now() + (window._serverTimeOffset || 0); }
                 if (age > 3 * 60 * 1000) {
                     fetch('/api/flood/reset', { method: 'POST' }).catch(() => {});
                     return;
@@ -68,7 +68,7 @@ function _beginFloodWarning(triggeredAtMs) {
     let secondsLeft = 20;
 
     if (triggeredAtMs) {
-        const elapsed = Math.floor((Date.now() - triggeredAtMs) / 1000);
+        function serverNow() { return Date.now() + (window._serverTimeOffset || 0); }
         secondsLeft = Math.max(1, 20 - elapsed);
     }
 
