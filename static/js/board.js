@@ -145,6 +145,12 @@ function renderNote(p) {
 
     const badgeHtml = (p.type === 'image' && p.fileExt) ? `<span class="note-filetype-badge">.${p.fileExt}</span>` : '';
     const metaHtml = `<div class="note-meta-row">${badgeHtml}<span class="note-score">${scoreLabel(p.score)}</span></div>`;
+    
+    if (p.denounced) {
+        board.appendChild(note);
+        _denounceNoteElement(note, 'banished');
+        return;
+    }
 
     if ((p.type === 'drawing' || p.type === 'image') && p.imageUrl) {
         note.classList.add('is-media');
