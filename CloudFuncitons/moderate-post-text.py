@@ -6,8 +6,17 @@ from datetime import datetime, timezone
 """
 This cloud function is used to moderate TEXT posts. It uses 
 Google Cloud Natural Language API to scan text (including captions)
-for toxicity, profanity, insults, derogatory language, and sexually explicit content. 
-If any of these categories are flagged above a certain rating, a flood occurs.
+for inappropriate content. If the text is flagged above a certain rating, a flood occurs.
+
+All categories share the same severity level, so they require the same score each
+to trigger a flood.
+
+Categories:
+- Toxic:                any text that is likely to make people leave a conversation.
+- Profanity:            any text that contains profanity, swear words, or slurs.
+- Sexually Explicit:    any text that contains explicit sexual content.
+- Insult:               any text that contains insults or attacks on a person or group.
+- Derogatory:           any text that contains negative or discriminatory language about a person or group
 
 
 Had to read official documentation for this:

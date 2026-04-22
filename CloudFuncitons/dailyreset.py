@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 """
 This is the Cloud function that uses Cloud Scheduler to reset the board
-every night at midnight. Might change time later.
+every night at midnight (EDT). Might change time later.
 
 The job in Cloud Scheduler curls(?) the URL to trigger reset_board.
 """

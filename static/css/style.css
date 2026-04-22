@@ -1,3 +1,19 @@
+/*
+This CSS file contains all the styling for the whole website.
+
+This is soooo long. Some have header sections to describe what they're for, but here are the main ones:
+- global styling: basic resets and body layout
+- board styling: the main canvas where posts are placed
+- topbar toolbar: the header bar with identity, add button, and timer
+- post appearance: the design of the sticky notes on the board
+- modals: the design for all pop-up modals (terms, welcome, help, post menu, view post)
+- search bar: the design for the search input and results
+- drawing panel: the design for the drawing interface when creating a drawing post
+- flood: the design for the flood warning banner and flooding animation
+- post effects: the design for post interactions like viewing, voting, and search highlighting, righteous
+    glow, sinful glow, etc.
+*/
+
 /*  global styling */
 * {
   box-sizing: border-box;

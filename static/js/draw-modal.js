@@ -1,3 +1,24 @@
+/*
+Draw-modal handles the drawing interface in the post modal.
+
+@param:
+none directly
+
+@usage:
+When a user clicks the "draw" button in the post editor, openDrawMode() is called to show the drawing UI. 
+The user can draw on the canvas, choose colors and brush sizes, undo actions, clear the canvas, and add a caption. 
+When they click "Post Drawing", the script uploads the drawing to the server and then calls startPlacingDrawing() 
+with the URL of the uploaded image and the caption.
+
+@return:
+none directly, but it will eventually call startPlacingDrawing() with the image URL and caption when the user posts.
+
+@notes:
+- The drawing is done on an HTML5 canvas element.
+- The script maintains a history of drawing states for undo functionality.
+- Changing the background color will prompt a warning if there is existing drawing content, as it will be lost.
+*/
+
 let drawHistory = [];
 let isDrawing = false;
 let drawCtx = null;
@@ -6,6 +27,8 @@ let canvasInitialized = false;
 let _currentDrawBg = '#fff9a3';
 
 function initDrawCanvas() {
+    // param: none
+    // return: none, but initializes drawing canvas and sets up event listeners for drawing actions
     drawCanvas = document.getElementById('draw-canvas');
     drawCtx = drawCanvas.getContext('2d');
     drawCtx.fillStyle = _currentDrawBg;
@@ -45,6 +68,9 @@ function initDrawCanvas() {
 }
 
 function getCanvasPos(e) {
+    // param: e (MouseEvent) the mouse event from the canvas
+    // return:  an object with x and y properties representing the 
+    //          mouse position relative to the canvas, accounting for scaling
     const rect = drawCanvas.getBoundingClientRect();
     return {
         x: (e.clientX - rect.left) * (drawCanvas.width / rect.width),
@@ -53,17 +79,23 @@ function getCanvasPos(e) {
 }
 
 function saveDrawState() {
+    // param: none
+    // return: none, but saves the current state of the drawing canvas to the history stack for undo functionality
     if (drawHistory.length > 30) drawHistory.shift();
     drawHistory.push(drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
 }
 
 function undoDraw() {
+    // param: none
+    // return: none, but reverts the drawing canvas to the previous state
     if (drawHistory.length <= 1) return;
     drawHistory.pop();
     drawCtx.putImageData(drawHistory[drawHistory.length - 1], 0, 0);
 }
 
 function clearDrawCanvas(bgColor) {
+    // param: bgColor (string) the background color to fill the canvas with
+    // return: none, but clears the drawing canvas and save history
     _currentDrawBg = bgColor || '#fff9a3';
     drawHistory = [];
     drawCtx.fillStyle = _currentDrawBg;
@@ -72,10 +104,15 @@ function clearDrawCanvas(bgColor) {
 }
 
 function hasDrawingContent() {
+    // param: none
+    // return: boolean indicating if there is any drawing
+    // used to warn users about losing their drawing if they switch modes or change background
     return drawHistory.length > 1;
 }
 
 function openDrawMode(userColor) {
+    // param: userColor (object) an object containing 'bg' and 'author' color values for the user
+    // return: none, but sets up the UI for drawing mode and initializes the canvas
     document.getElementById('draw-panel').style.cssText = 'display:flex; flex-direction:column; gap:12px;';
     document.getElementById('post-editor').style.display = 'none';
     document.getElementById('color-wheel-wrap').style.display = 'none';
@@ -109,6 +146,8 @@ function openDrawMode(userColor) {
 }
 
 function closeDrawMode() {
+    // param: none
+    // return: none, but hides the drawing UI and resets the canvas state
     document.getElementById('draw-panel').style.display = 'none';
     document.getElementById('post-editor').style.display = 'flex';
     document.getElementById('color-wheel-wrap').style.display = '';
@@ -117,6 +156,8 @@ function closeDrawMode() {
 }
 
 function updateSizePreview() {
+    // param: none
+    // return: none, but updates the preview dot to reflect the current brush size and color
     const size = document.getElementById('draw-size').value;
     const dot = document.getElementById('size-preview-dot');
     dot.style.width = size + 'px';
@@ -125,6 +166,8 @@ function updateSizePreview() {
 }
 
 async function submitDrawing() {
+    // param: none
+    // return: a Promise that resolves to the public URL of the uploaded drawing, or null if upload fails
     return new Promise((resolve) => {
         drawCanvas.toBlob(async (blob) => {
             try {
@@ -149,6 +192,8 @@ const PALETTE_COLORS = [
 ];
 
 function buildPalette() {
+    // param: none
+    // return: none, but builds the color palette
     const palette = document.getElementById('draw-palette');
     PALETTE_COLORS.forEach(c => {
         const swatch = document.createElement('button');

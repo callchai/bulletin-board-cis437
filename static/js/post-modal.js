@@ -1,5 +1,7 @@
 /*
-for the pop up when hitting post button
+Post-modal.js contains all the logic for the text posting modal, which allows users to write a note,
+select a color, and post it to the board. It manages the UI state of the modal, including the character count, 
+color selection, and preview of the note. 
 */
 let pendingText = null;
 let pendingColor = null;

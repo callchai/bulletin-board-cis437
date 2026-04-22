@@ -1,8 +1,27 @@
 /*
-This file is for uploading images and gifs.
-Currently WIP
-Limiting GIFs to 3 mb long, 5 mb images.
-I am not even gonna attempt short videos.
+Image-modal handles the UI for when a user wants to post an image. 
+It includes the file input, preview, caption, and warnings about size. 
+It also handles the upload process and then calls startPlacingImage() 
+with the URL of the uploaded image when ready.
+
+@param:
+none directly
+
+@usage:
+When a user clicks the "image/gif" button in the post editor, openImageMode() 
+is called to show the image posting UI. The user can select an attachment,
+see a preview, add a caption, and then click "Post Image". The script will
+handle the file validation, show warnings if necessary, upload the image to the server,
+and then call startPlacingImage() with the URL of the uploaded image and the caption.
+
+@return:
+none directly, but it will eventually call startPlacingImage() with the image URL and caption when the user posts.
+
+@notes:
+- The script checks for file size limits and shows warnings for large files or dimensions.
+- Files above 5MB are downright rejected.
+- It supports JPEG, PNG, GIF, and WebP images.
+- The image preview is shown in the modal before posting.
 */
 
 const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
@@ -13,6 +32,8 @@ let _imageExt = null;
 let _imagePreviewUrl = null;
 
 function openImageMode(userColor) {
+    // param: userColor (string) the color to use for the image post, passed to startPlacingImage later
+    // return: none, but sets up the image posting UI and resets any previous state
     document.getElementById('image-panel').style.display = 'flex';
     document.getElementById('post-editor').style.display = 'none';
     document.getElementById('color-wheel-wrap').style.display = 'none';
@@ -30,6 +51,8 @@ function openImageMode(userColor) {
 }
 
 function closeImageMode() {
+    // param: none
+    // return: none, but hides the image posting UI and resets state
     document.getElementById('image-panel').style.display = 'none';
     document.getElementById('post-editor').style.display = 'flex';
     document.getElementById('color-wheel-wrap').style.display = '';
@@ -43,6 +66,8 @@ function closeImageMode() {
 }
 
 function _getExt(file) {
+    // param: file (File object) the file to get the extension for
+    // return: string extension like 'jpg' or 'png' based on the file's MIME type, defaults to 'jpg' if unknown
     const mime = file.type;
     const map = {
         'image/jpeg': 'jpg',
@@ -54,6 +79,9 @@ function _getExt(file) {
 }
 
 function _showImageWarning(msg, isError = false) {
+    // param: msg (string) the warning message to display
+    // param: isError (boolean) whether the warning is an error
+    // return: none, but displays the warning message in the UI
     const el = document.getElementById('image-warning');
     el.textContent = msg;
     el.style.display = msg ? 'block' : 'none';
@@ -63,6 +91,7 @@ function _showImageWarning(msg, isError = false) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Set up event listeners for the image posting UI
     document.getElementById('btn-image').addEventListener('click', () => {
         if (typeof hasDrawingContent === 'function' && hasDrawingContent()) {
             if (!confirm('Switch to Image mode? Your drawing will be lost.')) return;
@@ -93,6 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('image-file-input').addEventListener('change', (e) => {
+        // param: e (Event) the change event from the file input
+        // return: none, but processes the selected file, 
+        //      shows a preview, and enables the post button if valid
         const file = e.target.files[0];
         if (!file) return;
 

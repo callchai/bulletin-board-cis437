@@ -1,3 +1,24 @@
+/* 
+Trial-modal contains all the logic for the trial and defense modals, 
+which are shown when a post is put on trial for breaking the rules.
+
+@params:
+None, but relies on server API endpoints to function.
+
+@usage:
+This script is included in the main HTML file and runs on page load. 
+It polls the server every 4 seconds to check if there is an active trial. 
+If a trial is active, it shows a banner and allows users to view the trial details and vote.
+
+@return
+none, but it will show the appropriate modals and banners to the user based on the trial status.
+
+@notes:
+- If banished or exiled, the user's existing posts are denounced and they see a banishment screen. 
+- If forgiven, they remain unaffected
+*/
+
+
 const TRIAL_SCORE_THRESHOLD = -2;
 const TRIAL_VOTE_SECONDS = 30;
 const EXILE_MINUTES = 5;
@@ -33,6 +54,11 @@ let _trialState = {
 };
 
 function checkForTrial(postId, score, author) {
+    // param: postId (string) the ID of the post to check 
+    // param: score (number) the current score of the post
+    // param: author (string) the name of the post's author
+    // return: none directly, but if the post meets the criteria 
+    //      for a trial, it will send a request to the server to start a trial for that post
     if (score > TRIAL_SCORE_THRESHOLD) return;
     if (author === currentUserName) return;
     fetch('/api/trials', {
@@ -48,10 +74,14 @@ function checkForTrial(postId, score, author) {
 }
 
 function startTrialPolling() {
+    // param: none
+    // return: none, but starts a polling interval to check for active trials every 4 seconds
     setInterval(pollActiveTrial, 4000);
 }
 
 async function pollActiveTrial() {
+    // param: none
+    // return: none directly, but checks the server for any active trials and updates the UI accordingly
     try {
         const res = await fetch('/api/trials/active');
         const trial = await res.json();
@@ -99,6 +129,9 @@ async function pollActiveTrial() {
 
 
 function showTrialBanner(status) {
+    // param: status (string) the current status of the trial ('pending' or 'active')
+    // return: none, but shows banner at bottom of page indicating trial status and allowing users
+    //      to join the trial if it's active
     const banner = document.getElementById('trial-banner');
     if (!banner) return;
     if (banner.classList.contains('show') && banner.dataset.status === status) return;
@@ -114,12 +147,16 @@ function showTrialBanner(status) {
 }
 
 function hideTrialBanner() {
+    // This just hides trial banner, called when there is no active trial or after a trial concludes
     const banner = document.getElementById('trial-banner');
     if (banner) banner.classList.remove('show');
 }
 
 
 function showDefenseModal(trialId) {
+    // param: trialId (string) the ID of the trial for which to show the defense modal
+    // return: none, but shows the defense modal allowing the 
+    //      accused to prepare and submit their defense within 30 seconds
     if (document.getElementById('defense-modal')?.classList.contains('show')) return;
     const modal = document.getElementById('defense-modal');
     if (!modal) return;
@@ -164,6 +201,11 @@ function showDefenseModal(trialId) {
 }
 
 function _submitDefense(trialId, defense, modal, submitBtn) {
+    // param: trialId (string) the ID of the trial for which to submit the defense
+    // param: defense (string) the text of the defense being submitted
+    // param: modal (HTMLElement) the defense modal element to be hidden after submission
+    // param: submitBtn (HTMLElement) the submit button element to be updated during submission
+    // return: none, but submits the defense to the server
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
     submitBtn.style.background = '';
@@ -181,7 +223,9 @@ function _submitDefense(trialId, defense, modal, submitBtn) {
 
 
 function showTrialModal(trial, autoShow = false) {
-    /* This is the one that all users (the jury) will see*/
+    // param: trial (object) the trial data object containing details about the trial to be shown
+    // param: autoShow (boolean) whether to automatically show the modal after setting it up (default: false)
+    // return: none, but sets up the trial modal
     const modal = document.getElementById('trial-modal');
     if (!modal) return;
 
@@ -189,6 +233,9 @@ function showTrialModal(trial, autoShow = false) {
     if (!currentlyShowing) {
         modal.dataset.trialId = trial.id;
 
+
+        // HTML is built here based on the post data and defense status of the trial. 
+        // If there is post data, it shows the offending post.
         const postData = trial.postData || _trialState.postData;
         let postHtml = '';
         if (postData) {
@@ -258,6 +305,8 @@ function showTrialModal(trial, autoShow = false) {
 }
 
 function _updateVoteButtonStyles() {
+    // param: none
+    // return: none, but updates the styles of the vote buttons based on the user's current vote
     const fBtn = document.getElementById('btn-trial-forgive');
     const bBtn = document.getElementById('btn-trial-banish');
     if (!fBtn || !bBtn) return;
@@ -266,6 +315,9 @@ function _updateVoteButtonStyles() {
 }
 
 function castTrialVote(trialId, direction) {
+    // param: trialId (string) the ID of the trial for which to cast the vote
+    // param: direction (string) either 'forgive' or 'banish' indicating the user's vote
+    // return: none, but sends the user's vote to the server and updates the UI based on the new vote counts
     fetch(`/api/trials/${trialId}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -285,6 +337,10 @@ function castTrialVote(trialId, direction) {
 }
 
 function startTrialCountdown(trialId, startedAtMs) {
+    // param: trialId (string) the ID of the trial for which to start the countdown
+    // param: startedAtMs (number) the timestamp in milliseconds when the trial started
+    // return: none, but starts a countdown timer that updates the trial modal 
+    //      every second and concludes the trial when time runs out
     if (_trialState.timerInterval) clearInterval(_trialState.timerInterval);
 
     _trialState.timerInterval = setInterval(() => {
@@ -306,6 +362,8 @@ function startTrialCountdown(trialId, startedAtMs) {
 }
 
 function _concludeTrial(trialId) {
+    // param: trialId (string) the ID of the trial to conclude
+    // return: none, but sends a request to the server to conclude the trial and handles the verdict
     fetch(`/api/trials/${trialId}/conclude`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -317,6 +375,8 @@ function _concludeTrial(trialId) {
 }
 
 function _handleConcluded(trial) {
+    // param: trial (object) the trial data object containing details about the concluded trial
+    // return: none, but handles the conclusion of the trial by updating the UI
     if (_trialState.status === 'concluded') return;
     // if (_trialState.verdict === trial.verdict && _trialState.status === 'concluded') return;
     _trialState.status = 'concluded';
@@ -326,6 +386,12 @@ function _handleConcluded(trial) {
 }
 
 function _handleVerdict(verdict, accused, forgiveCount, banishCount) {
+    // param: verdict (string) the verdict of the trial ('forgiven', 'banished', or 'exiled')
+    // param: accused (string) the name of the accused poster
+    // param: forgiveCount (number) the total number of forgiveness votes (optional, may be null)
+    // param: banishCount (number) the total number of banishment votes (optional, may be null)
+    // return: none, but updates the UI based on the verdict, including denouncing posts if necessary
+    //      and forcing accused to see banishment 
         if (typeof cleanup === 'function') cleanup();
     document.getElementById('trial-modal')?.classList.remove('show');
     document.getElementById('defense-modal')?.classList.remove('show');
@@ -350,6 +416,9 @@ function _handleVerdict(verdict, accused, forgiveCount, banishCount) {
 }
 
 function _denounceNoteElement(el, verdict) {
+    // param: el (HTMLElement) the note element to be denounced
+    // param: verdict (string) the verdict of the trial ('banished' or 'exiled')
+    // return: none, but updates the note element to reflect that it has been denounced by the Board
     el.style.background = '#000';
     el.style.setProperty('--note-bg', '#000');
     el.style.cursor = 'default';
@@ -360,6 +429,8 @@ function _denounceNoteElement(el, verdict) {
 
 /* This is for the banished user screen*/
 function showBanishmentScreen(verdict) {
+    // param: verdict (string) the verdict of the trial ('banished' or 'exiled')
+    // return: none, but shows the banishment screen to the user with appropriate messaging based on the verdict
     const screen = document.getElementById('banishment-screen');
     if (!screen) return;
     const msg = document.getElementById('banishment-message');
@@ -406,6 +477,11 @@ function showBanishmentScreen(verdict) {
 }
 
 function showVerdictToast(verdict, accused, forgiveCount, banishCount) {
+    // param: verdict (string) the verdict of the trial ('forgiven', 'banished', or 'exiled')
+    // param: accused (string) the name of the accused poster
+    // param: forgiveCount (number) the total number of forgiveness votes (optional, may be null)
+    // param: banishCount (number) the total number of banishment votes (optional, may be null)
+    // return: none, but shows a toast notification at the bottom of the screen with the verdict and vote counts
     const toast = document.getElementById('verdict-toast');
     if (!toast) return;
 
@@ -425,6 +501,8 @@ function showVerdictToast(verdict, accused, forgiveCount, banishCount) {
 }
 
 function _clearTrialState() {
+    // param: none
+    // return: none, but resets the internal trial state to be ready for the next trial
     clearInterval(_trialState.timerInterval);
     _trialState = {
         id: null, status: null, accused: null, postData: null,
@@ -437,6 +515,8 @@ function _clearTrialState() {
 }
 
 function checkBanOnLoad() {
+    // param: none
+    // return: none, but checks if the current user is banned when the page loads and shows the banishment screen if so
     fetch(`/api/banned/${encodeURIComponent(currentUserName)}`)
         .then(r => r.json())
         .then(res => {
@@ -467,6 +547,8 @@ let _bannerTimerInterval = null;
 makes the trial screen easier to read
 */
 function openTrialPostFullscreen() {
+    // param: none
+    // return: none, but opens the offending post in a fullscreen modal
     const pd = _trialState.postData;
     if (!pd) return;
     const modal = document.getElementById('view-modal');

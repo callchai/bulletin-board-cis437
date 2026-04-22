@@ -1,4 +1,30 @@
+/*
+Term-modal.js contains all the logic for the terms modal, welcome modal, and welcome back modal.
+
+@params:
+None, but relies on cookies and server API endpoints to function.
+
+@usage:
+This script is included in the main HTML file and runs on page load. 
+It manages the display of the terms modal, welcome modal, 
+and welcome back modal based on the user's cookies and server checks.
+
+@return
+none, but it will show the appropriate modal to the user and initialize the board if they are allowed to post.
+
+@notes:
+- On first visit, it shows the terms modal. Once accepted, it shows the welcome modal with a random quote.
+- On subsequent visits, it checks if the user is banned. If banned, it shows the banishment screen. 
+    If not, it shows a welcome back modal.
+*/
 async function checkGenerationAndInit() {
+    /* 
+    param: none
+    return: none 
+    but checks the server generation against the client's stored generation cookie 
+    to determine if a reload is needed, and then checks if the user has accepted terms 
+    or is banned to show the appropriate modal
+    */
     const fetchStart = Date.now();
     const [boardRes, nowRes] = await Promise.all([
         fetch('/api/board-start'),
@@ -45,9 +71,14 @@ checkGenerationAndInit();
 
 
 function setCookie(name, value) {
+    // param: name (string) the name of the cookie to set
+    // param: value (string) the value of the cookie to set
+    // return: none, but creates a cookie with a name for the user
     document.cookie = name + "=" + encodeURIComponent(value) + "; path=/";
 }
 function getCookie(name) {
+    // param: name (string) the name of the cookie to retrieve
+    // return: the value of the cookie with the given name, or null if not found
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i=0;i<ca.length;i++){
@@ -131,10 +162,7 @@ if (!savedName) {
     setCookie('bb_color', JSON.stringify(userColor));
 }
 
-// give color choice later?
 document.getElementById('codename').textContent = name;
-
-
 
 const termsModal = document.getElementById('terms-modal');
 const acceptBtn = document.getElementById('accept-terms');
@@ -146,6 +174,9 @@ const boardQuote = document.getElementById('board-quote');
 const enterBtn = document.getElementById('enter-board');
 
 function showWelcomeModal() {
+    // param: none
+    // return: none, but shows the welcome modal to the user 
+    //      with their assigned name and a random quote from the Board
     const userAliasP = document.getElementById('user-alias');
     const boardQuote = document.getElementById('board-quote');
 
@@ -161,6 +192,7 @@ function showWelcomeModal() {
 }
 
 enterBtn.addEventListener('click', () => {
+    // This is the event listener for the "Enter Board" button in the welcome modal.
     const welcomeModal = document.getElementById('welcome-modal');
     welcomeModal.classList.remove('show');
     setTimeout(() => { welcomeModal.style.display = 'none'; }, 300);
@@ -169,6 +201,9 @@ enterBtn.addEventListener('click', () => {
 });
 
 function showWelcomeBackModal() {
+    // param: none
+    // return: none, but shows the welcome back modal to the user 
+    //      with their name and a welcome back message
     const modal = document.getElementById('welcomeback-modal');
     const nameEl = document.getElementById('welcomeback-name');
     nameEl.textContent = name;
@@ -189,6 +224,8 @@ fetch('/api/posts', { cache: 'no-store' })
 
 
 function showScreenToastSizeWarning() {
+    // param: none
+    // return: none, This is for the tiny screen size warning.
     const toast = document.getElementById('screen-toast-size-warning');
     const closeBtn = document.getElementById('toast-size-warning-close');
     setTimeout(() => toast.classList.add('show'), 400);

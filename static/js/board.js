@@ -1,10 +1,33 @@
+/* 
+Board handles rendering posts, opening modals, and the search bar. 
+Basically everything that isn't directly related uploading.
+
+@param:
+none directly
+
+@usage:
+initBoard() is called with the user's name and color to set up the board. 
+It fetches initial posts, sets up the clock, and starts polling for updates. 
+When a user clicks on a post, openViewModal() is called to show the post details and voting options. 
+The search bar filters posts by author name in real-time.
+
+@return:
+none directly, but it will render posts on the board and handle user interactions.
+
+@notes:
+- The board is scaled to fit the screen and has a fixed size of 1600x900 for consistent placement.
+- Posts are rendered as "sticky notes" with author name, content, and score.
+- The script handles placing new posts on the board with a ghost preview before confirming placement.
+*/
+
 const board = document.getElementById('board');
 let placing = false, activeEl = null, activeColor = null;
 let currentUserName = null;
 
-
-
 function initBoard(userName, userColor) {
+    // param: userName (string) the name of the current user
+    // param: userColor (object) an object containing 'bg' and 'author' color values for the user
+    // return: none
     currentUserName = userName;
     checkBanOnLoad();
     startTrialPolling();
@@ -68,17 +91,20 @@ function initBoard(userName, userColor) {
 }
 
 function moveGhost(e) {
+    // param: e (MouseEvent) the mousemove event triggered when placing a new post
+    // return: none, but it moves the ghost preview element to follow the cursor
     const ghost = document.getElementById('ghost-note');
     if (!ghost) return;
     const r = board.getBoundingClientRect();
 
-    // --- !!! --- TEST THIS FOR SCALING ISSUE FIX --- !!! ---
     const scale = r.width / 1600;
     ghost.style.left = ((e.clientX - r.left) / scale - 80) + 'px';
     ghost.style.top  = ((e.clientY - r.top)  / scale - 20) + 'px';
 }
 
 function dropNote(e) {
+    // param: e (MouseEvent) the click event triggered when confirming placement of a new post
+    // return: none, but creates post on board and sends post data to server
     if (!placing) return;
     const ghost = document.getElementById('ghost-note');
     const r = board.getBoundingClientRect();
@@ -115,6 +141,9 @@ function dropNote(e) {
 }
 
 function startPlacing(text, color) {
+    // param: text (string) the text content of the post being placed
+    // param: color (object) an object containing 'bg' and 'author' color values for the post
+    // return: none, but it initiates placing process with ghost preview of the post
     placing = true;
     activeColor = color;
     const ghost = document.createElement('div');
@@ -137,6 +166,8 @@ function startPlacing(text, color) {
 }
 
 function renderNote(p) {
+    // param: p (object) the post data object containing id, text, author, color, position, score, etc.
+    // return: none, but it creates a note element on the board representing the post
     const note = document.createElement('div');
     note.className = 'sticky';
     note.dataset.id = p.id;
@@ -172,6 +203,8 @@ function renderNote(p) {
 }
 
 function openViewModal(p) {
+    // param: p (object) the post data object for the post being viewed
+    // return: none, but it opens a modal displaying the post details and voting options
     if (placing) return;
 
     const modal = document.getElementById('view-modal');
@@ -242,6 +275,7 @@ function openViewModal(p) {
         }).catch(() => {});
 
     function renderVoteButtons() {
+        // This updates the vote buttons in the view modal
         document.getElementById('vote-up').style.fontWeight = userVote === 'up' ? 'bold' : 'normal';
         document.getElementById('vote-down').style.fontWeight = userVote === 'down' ? 'bold' : 'normal';
         document.getElementById('view-score').textContent = `Score: ${p.score || 0}`;
@@ -288,6 +322,8 @@ document.getElementById('view-modal').addEventListener('click', (e) => {
 });
 
 function cleanup() {
+    // param: none
+    // return: none, but it resets the state after placing a post or canceling placement
     placing = false; activeEl = null;
     document.body.classList.remove('is-placing', 'is-posting');
     board.removeEventListener('mousemove', moveGhost);
@@ -377,7 +413,7 @@ setInterval(() => {
     }, 8000);
 
 /*
-scaleBaord is another band aid fix to make board size 
+scaleBoard is another band aid fix to make board size 
 consistent across different resolutions.
 */
 function scaleBoard() {
@@ -440,6 +476,10 @@ searchClear.addEventListener('click', () => {
 });
 
 function startPlacingDrawing(imageUrl, color, caption) {
+    // param: imageUrl (string) the URL of the drawing to be placed
+    // param: color (object) an object containing 'bg' and 'author' color values for the post
+    // param: caption (string) the caption text
+    // return: none, but it initiates placing process with ghost preview of the drawing post
     placing = true;
     activeColor = color;
     const ghost = document.createElement('div');
@@ -465,6 +505,11 @@ function startPlacingDrawing(imageUrl, color, caption) {
 }
 
 function startPlacingImage(imageUrl, fileExt, color, caption) {
+    // param: imageUrl (string) the URL of the image to be placed
+    // param: fileExt (string) the file extension of the image
+    // param: color (object) an object containing 'bg' and 'author' color values for the post
+    // param: caption (string) the caption text
+    // return: none, but it initiates placing process with ghost preview of the image post
     placing = true;
     activeColor = color;
     const ghost = document.createElement('div');
@@ -492,6 +537,8 @@ function startPlacingImage(imageUrl, fileExt, color, caption) {
 }
 
 function scoreLabel(score) {
+    // param: score (number) the score of the post
+    // return: a string label for the score with a symbol
     score = score || 0;
     if (score > 0) return `+${score} ✦`;
     if (score < 0) return `${score} ✦`;
