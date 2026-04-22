@@ -189,7 +189,7 @@ function _beginFloodRise(triggeredAtMs) {
 
     // note to self--flood is 60 seconds
     // animate from 0% to 100% of (board-wrapper + toolbar) height
-    const totalHeight = wrapper.clientHeight + toolbar.clientHeight;
+    const totalHeight = (wrapper.clientHeight || window.innerHeight) + (toolbar.clientHeight || 56);
     const DURATION_MS = 60000;
     const TICK_MS = 200;
     const steps = DURATION_MS / TICK_MS;
