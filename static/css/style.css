@@ -2040,3 +2040,27 @@ and too many pages on w3schools to count (https://www.w3schools.com/)
     0%   { background-position: 0 100%, 40px 100%, 20px 100%; }
     100% { background-position: 0 -80px, 40px -60px, 20px -100px; }
 }
+
+/* 
+This is SOLELY for the demo. only appears 
+on staging version. (just a hint box with a link)
+*/
+#join-hint-box {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(253, 246, 227, 0.92);
+    border: 1.5px solid #d4af37;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #7a5a00;
+    z-index: 500;
+    pointer-events: none;
+    line-height: 1.7;
+}
+
+#join-hint-sub {
+    font-size: 11px;
+    opacity: 0.75;
+}
