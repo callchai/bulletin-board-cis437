@@ -194,7 +194,7 @@ function renderNote(p) {
 
     board.appendChild(note);
     if (p.score >= 5) note.classList.add('righteous');
-    if (p.score < 0) note.classList.add('sinful');
+    if (p.score < -2) note.classList.add('sinful');
     if (p.denounced) {
         _denounceNoteElement(note, 'banished');
     } else {

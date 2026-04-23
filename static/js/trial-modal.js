@@ -19,7 +19,7 @@ none, but it will show the appropriate modals and banners to the user based on t
 */
 
 
-const TRIAL_SCORE_THRESHOLD = -2;
+const TRIAL_SCORE_THRESHOLD = -4;
 const TRIAL_VOTE_SECONDS = 30;
 const EXILE_MINUTES = 5;
 
